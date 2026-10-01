@@ -1399,7 +1399,7 @@ observeReveal(document);
   const MD={event:'Dokumentasi Event',dokumentasi:'Dokumentasi Kegiatan'};
   const BLANK='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22/%3E';
   const defIcons={}, defNames={}; categories.forEach(c=>{ defIcons[c.key]=c.icon; defNames[c.key]=c.name.replace(/&amp;/g,'&'); });
-  let cats=categories.map(c=>({key:c.key,name:defNames[c.key],desc:c.desc,items:c.items.slice(),ik:c.key}));
+  let cats=categories.map(c=>({key:c.key,name:defNames[c.key],desc:c.desc,items:c.items.slice(),ik:c.key,icon:''}));
   const aSl=[...document.querySelectorAll('#perusahaan .about-visual .ph')], defAbout=aSl.map(s=>s.outerHTML);
   const aP=[...document.querySelectorAll('#perusahaan .about-grid > div:first-child > p')];
   let about={title:$('#perusahaan .about-grid h2').textContent, p1:(aP[0]||{}).textContent||'', p2:(aP[1]||{}).textContent||'', visi:($('#perusahaan .vm-card p')||{}).textContent||'',
@@ -1430,10 +1430,10 @@ observeReveal(document);
   }
   function applyCategories(){
     const cur=($('#filterChips .chip.active')||{dataset:{}}).dataset.key||'all';
-    categories.splice(0,categories.length,...cats.map(c=>({key:c.key,name:E(c.name),desc:E(c.desc),items:c.items.map(E),icon:defIcons[c.ik]||defIcons.daging||''})));
+    categories.splice(0,categories.length,...cats.map(c=>({key:c.key,name:E(c.name),desc:E(c.desc),items:c.items.map(E),icon:defIcons[c.ik]||defIcons.daging||'',customIcon:c.icon||''})));
     categoryGrid.innerHTML='';
     categories.forEach(c=>{ const card=document.createElement('div'); card.className='cat-card';
-      card.innerHTML='<div class="cat-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7">'+c.icon+'</svg></div><h3>'+c.name+'</h3><p>'+c.desc+'</p><div class="cat-items">'+c.items.map(i=>'<span>'+i+'</span>').join('')+'</div><div class="cat-link">Lihat Produk<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>';
+      card.innerHTML='<div class="cat-icon">'+(c.customIcon?'<img src="'+E(blob(c.customIcon))+'" alt="" style="width:26px;height:26px;object-fit:contain">':'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.7">'+c.icon+'</svg>')+'</div><h3>'+c.name+'</h3><p>'+c.desc+'</p><div class="cat-items">'+c.items.map(i=>'<span>'+i+'</span>').join('')+'</div><div class="cat-link">Lihat Produk<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>';
       card.addEventListener('click',()=>{ setFilter(c.key); $('#productGrid').scrollIntoView({behavior:'smooth',block:'center'}); }); categoryGrid.appendChild(card); });
     filterChips.innerHTML='';
     [{key:'all',name:'Semua'},...categories].forEach(c=>{ const chip=document.createElement('button'); chip.className='chip'; chip.textContent=c.name.replace(/&amp;/g,'&'); chip.dataset.key=c.key; chip.addEventListener('click',()=>setFilter(c.key)); filterChips.appendChild(chip); });
@@ -1526,6 +1526,8 @@ observeReveal(document);
       body.innerHTML=cats.map((c,i)=>'<div class="adm-row" style="grid-template-columns:1fr"><div class="adm-f">'
         +'<input data-ci="'+i+'" data-cf="name" value="'+E(c.name)+'" placeholder="Nama kategori">'
         +'<select data-ci="'+i+'" data-cf="ik">'+Object.keys(defIcons).map(k=>'<option value="'+k+'"'+(k===c.ik?' selected':'')+'>Ikon '+E(defNames[k])+'</option>').join('')+'</select>'
+        +'<div class="full" style="display:flex;align-items:center;gap:10px;margin-top:4px;flex-wrap:wrap"><img src="'+(c.icon?E(blob(c.icon)):BLANK)+'" alt="" style="width:36px;height:36px;border-radius:8px;background:#f1efee;object-fit:contain;padding:4px;box-sizing:border-box;flex:none">'
+          +'<input type="file" accept="image/*" data-cicon="'+i+'" style="width:auto;flex:none"><span class="adm-sm">Ikon kustom (opsional, 64&times;64 px), mengganti ikon bawaan di atas</span>'+(c.icon?'<button type="button" data-c-noicon="'+i+'">Hapus ikon kustom</button>':'')+'</div>'
         +'<textarea data-ci="'+i+'" data-cf="desc" rows="2" placeholder="Deskripsi">'+E(c.desc)+'</textarea>'
         +'<input class="full" data-ci="'+i+'" data-cf="items" value="'+E(c.items.join(', '))+'" placeholder="Contoh produk, pisahkan dengan koma">'
         +ACT('c',i,'<button type="button" class="adm-del" data-c-del="'+i+'">Hapus kategori</button>')+'</div></div>').join('')
@@ -1565,6 +1567,7 @@ observeReveal(document);
     if(t.id==='admImport'){ try{ load(JSON.parse(await t.files[0].text())); mark(); say('Cadangan dimuat. Klik Simpan untuk menerapkan.'); render(); }catch(err){ say('File cadangan tidak valid.'); } return; }
     try{ if(t.dataset.aphoto!==undefined){ const i=+t.dataset.aphoto; about.photos[i]=await upload(t.files[0],i===0?800:1000,i===0?1200:800); }
          else if(t.dataset.mphoto!==undefined) media[+t.dataset.mphoto].assetId=await upload(t.files[0],1200,800);
+         else if(t.dataset.cicon!==undefined) cats[+t.dataset.cicon].icon=await upload(t.files[0],64,64);
          else if(t.dataset.hero!==undefined) slides[+t.dataset.hero]={id:await upload(t.files[0],1600,700)};
          else items[+t.dataset.photo].assetId=await upload(t.files[0],800,600);
          mark(); render(); }
@@ -1582,7 +1585,8 @@ observeReveal(document);
     else if(n('cDel')!==null){ const k=cats[n('cDel')];
       if(items.some(p=>p.category===k.key)){ say('Kategori masih dipakai produk. Pindahkan atau hapus produknya dulu.'); c=0; }
       else if(confirm('Hapus kategori ini?')) cats.splice(n('cDel'),1); else c=0; }
-    else if(e.target.id==='admAddC') cats.push({key:'kat-'+Date.now().toString(36),name:'Kategori Baru',desc:'',items:[],ik:'daging'});
+    else if(e.target.id==='admAddC') cats.push({key:'kat-'+Date.now().toString(36),name:'Kategori Baru',desc:'',items:[],ik:'daging',icon:''});
+    else if(n('cNoicon')!==null) cats[n('cNoicon')].icon='';
     else if(n('aNophoto')!==null) about.photos[n('aNophoto')]='';
     else if(n('mUp')!==null) mv(media,n('mUp'),-1); else if(n('mDn')!==null) mv(media,n('mDn'),1);
     else if(n('mDup')!==null){ const i=n('mDup'); media.splice(i+1,0,{...media[i],title:media[i].title+' (salinan)'}); }
