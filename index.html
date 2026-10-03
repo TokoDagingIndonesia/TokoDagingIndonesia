@@ -238,8 +238,29 @@
   /* ---------- Hero text: judul, deskripsi, CTA, statistik (di bawah slider) ---------- */
   .hero-top{
     padding:44px 0 40px; max-width:720px; margin:0 auto; text-align:center;
-    display:flex; flex-direction:column; align-items:center;
+    display:flex; flex-direction:column; align-items:center; position:relative;
   }
+  .hero-deco{ position:absolute; inset:0; pointer-events:none; z-index:0; overflow:visible; }
+  .hero-deco .deco-card{
+    position:absolute; width:clamp(92px,11vw,172px); height:clamp(92px,11vw,172px);
+    background:#fff; border-radius:22px; padding:6px; box-sizing:border-box;
+    box-shadow:0 20px 34px -12px rgba(20,18,17,.4), 0 2px 10px rgba(20,18,17,.1);
+    animation:decoFloat 4.8s ease-in-out infinite;
+  }
+  .hero-deco .deco-card img{ width:100%; height:100%; object-fit:cover; border-radius:16px; display:block; }
+  .hero-deco .deco-card:nth-child(1){ top:6%; left:-7vw; animation-delay:0s; }
+  .hero-deco .deco-card:nth-child(2){ top:16%; right:-8vw; animation-delay:.9s; }
+  .hero-deco .deco-card:nth-child(3){ bottom:16%; left:-5vw; animation-delay:1.8s; }
+  .hero-deco .deco-card:nth-child(4){ bottom:2%; right:-4vw; animation-delay:2.7s; }
+  @keyframes decoFloat{ 0%,100%{ transform:translateY(0) rotate(-3deg); } 50%{ transform:translateY(-18px) rotate(3deg); } }
+  .hero-top > *:not(.hero-deco){ position:relative; z-index:1; }
+  @media (max-width:980px){ .hero-deco .deco-card{ width:clamp(70px,9vw,110px); height:clamp(70px,9vw,110px); } .hero-deco .deco-card:nth-child(1),.hero-deco .deco-card:nth-child(2){ top:-2%; } }
+  @media (max-width:760px){
+    .hero-deco{ position:static; inset:auto; display:flex; justify-content:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; order:-1; }
+    .hero-deco .deco-card{ position:static; width:52px; height:52px; border-radius:13px; padding:3px; animation:decoFloatSm 4.8s ease-in-out infinite; }
+    .hero-deco .deco-card img{ border-radius:10px; }
+  }
+  @keyframes decoFloatSm{ 0%,100%{ transform:translateY(0) rotate(-3deg); } 50%{ transform:translateY(-7px) rotate(3deg); } }
   .hero-badge{
     display:inline-flex; align-items:center; gap:8px; background:var(--red-tint); color:var(--red);
     font-weight:700; font-size:13.5px; padding:8px 16px; border-radius:999px; margin-bottom:22px;
@@ -653,6 +674,7 @@
   </div>
 
   <div class="container hero-top reveal is-visible">
+    <div class="hero-deco" id="heroDeco"></div>
     <span class="hero-badge">Solusi Kebutuhan Dapur Anda</span>
     <h1>Pilihan Produk Berkualitas untuk Setiap Kebutuhan</h1>
     <p class="lead">Toko Daging Indonesia menghadirkan berbagai pilihan produk berkualitas untuk kebutuhan rumah tangga, bisnis, dan kuliner Indonesia.</p>
@@ -1320,7 +1342,7 @@ observeReveal(document);
 <button id="adminBtn" type="button" hidden>&#9881; Kelola Konten</button>
 <div id="adminOverlay" hidden><div class="adm-box">
   <div class="adm-head"><h3>Kelola Konten TDI</h3><button class="adm-del" id="admClose" type="button" style="color:var(--ink)">Tutup</button></div>
-  <div class="adm-tabs"><button type="button" data-t="hero" class="on">Foto Slider</button><button type="button" data-t="prod">Produk</button><button type="button" data-t="cat">Kategori</button><button type="button" data-t="about">Tentang</button><button type="button" data-t="media">Media</button><button type="button" data-t="set">Teks &amp; Link</button><button type="button" data-t="bak">Cadangan</button></div>
+  <div class="adm-tabs"><button type="button" data-t="hero" class="on">Foto Slider</button><button type="button" data-t="prod">Produk</button><button type="button" data-t="cat">Kategori</button><button type="button" data-t="deco">Dekorasi</button><button type="button" data-t="about">Tentang</button><button type="button" data-t="media">Media</button><button type="button" data-t="set">Teks &amp; Link</button><button type="button" data-t="bak">Cadangan</button></div>
   <input id="admQ" type="search" placeholder="Cari produk..." hidden>
   <div class="adm-body" id="admBody"></div>
   <div class="adm-foot"><span class="adm-sm" id="admStatus">Foto otomatis dipotong &amp; dikecilkan ke ukuran yang benar.</span><button class="btn btn-primary" id="admSave" type="button" style="padding:11px 22px" disabled>Simpan Perubahan</button></div>
@@ -1396,6 +1418,7 @@ observeReveal(document);
   let items=products.map(p=>({name:p.name,category:p.category,label:p.label,desc:p.desc,size:p.size,assetId:p.assetId||''}));
   let set={...defSet}, dirty=false, tab='hero', q='', lastJson='', savedAt=0;
   let media=mediaItems.map(m=>({type:m.type,title:m.title,meta:m.meta,assetId:''}));
+  let deco=[{id:''},{id:''},{id:''},{id:''}];
   const MD={event:'Dokumentasi Event',dokumentasi:'Dokumentasi Kegiatan'};
   const BLANK='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22/%3E';
   const defIcons={}, defNames={}; categories.forEach(c=>{ defIcons[c.key]=c.icon; defNames[c.key]=c.name.replace(/&amp;/g,'&'); });
@@ -1404,7 +1427,7 @@ observeReveal(document);
   const aP=[...document.querySelectorAll('#perusahaan .about-grid > div:first-child > p')];
   let about={title:$('#perusahaan .about-grid h2').textContent, p1:(aP[0]||{}).textContent||'', p2:(aP[1]||{}).textContent||'', visi:($('#perusahaan .vm-card p')||{}).textContent||'',
     labels:aSl.map(s=>(s.querySelector('.ph-label')||{}).textContent||''), photos:['','','']};
-  const snap=()=>JSON.stringify({slides,items,set,media,cats,about});
+  const snap=()=>JSON.stringify({slides,items,set,media,cats,about,deco});
   const src=s=>s.id?blob(s.id):defSrc[s.d];
 
   const ARR='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="';
@@ -1452,6 +1475,10 @@ observeReveal(document);
     mediaItems.splice(0,mediaItems.length,...media);
     const a=$('#mediaTabs .chip.active'); renderMedia(a?a.dataset.key:'all');
   }
+  function applyDeco(){
+    const hd=$('#heroDeco'); if(!hd) return;
+    hd.innerHTML=deco.filter(d=>d.id).map(d=>'<div class="deco-card"><img src="'+E(blob(d.id))+'" alt=""></div>').join('');
+  }
   window.renderMedia=function(k){                        // galeri media: mendukung foto
     mediaGrid.innerHTML='';
     (k==='all'?mediaItems:mediaItems.filter(m=>m.type===k)).forEach(m=>{
@@ -1474,6 +1501,7 @@ observeReveal(document);
     const p=await db.doc('site/products').get(); if(p.exists&&p.data().items){ items=p.data().items; applyProducts(); }
     const s=await db.doc('site/settings').get(); if(s.exists){ set={...defSet,...s.data()}; applySettings(); }
     const m=await db.doc('site/media').get(); if(m.exists&&m.data().items){ media=m.data().items; applyMedia(); }
+    const dc=await db.doc('site/deco').get(); if(dc.exists&&dc.data().items){ deco=dc.data().items; applyDeco(); }
     const mt=await db.doc('site/meta').get(); if(mt.exists) savedAt=mt.data().at||0;
   }catch(e){ console.warn('DB:',e); }
 
@@ -1489,13 +1517,14 @@ observeReveal(document);
   const mark=()=>{ dirty=true; sv.disabled=false; say('Ada perubahan yang belum disimpan.'); };
   const mv=(arr,i,d)=>{ const j=i+d; if(j<0||j>=arr.length) return; [arr[i],arr[j]]=[arr[j],arr[i]]; };
 
-  function crop(file,w,h){ return new Promise((ok,no)=>{ const im=new Image(), u=URL.createObjectURL(file);
+  function crop(file,w,h,keepAlpha){ return new Promise((ok,no)=>{ const im=new Image(), u=URL.createObjectURL(file);
     im.onload=()=>{ const c=document.createElement('canvas'); c.width=w; c.height=h; const r=Math.max(w/im.width,h/im.height), sw=w/r, sh=h/r;
-      c.getContext('2d').drawImage(im,(im.width-sw)/2,(im.height-sh)/2,sw,sh,0,0,w,h); URL.revokeObjectURL(u); c.toBlob(b=>b?ok(b):no(new Error('gagal')),'image/jpeg',.85); };
+      c.getContext('2d').drawImage(im,(im.width-sw)/2,(im.height-sh)/2,sw,sh,0,0,w,h); URL.revokeObjectURL(u);
+      if(keepAlpha) c.toBlob(b=>b?ok(b):no(new Error('gagal')),'image/png'); else c.toBlob(b=>b?ok(b):no(new Error('gagal')),'image/jpeg',.85); };
     im.onerror=()=>no(new Error('File bukan gambar')); im.src=u; }); }
-  async function upload(file,w,h){ say('Mengunggah foto...'); const r=await assets.upload(await crop(file,w,h)); return r.id; }
+  async function upload(file,w,h,keepAlpha){ say('Mengunggah foto...'); const r=await assets.upload(await crop(file,w,h,keepAlpha)); return r.id; }
 
-  function load(o){ if(o.slides) slides=o.slides; if(o.items) items=o.items; if(o.set) set={...defSet,...o.set}; if(o.media) media=o.media; if(o.cats) cats=o.cats; if(o.about) about={...about,...o.about}; }
+  function load(o){ if(o.slides) slides=o.slides; if(o.items) items=o.items; if(o.set) set={...defSet,...o.set}; if(o.media) media=o.media; if(o.cats) cats=o.cats; if(o.about) about={...about,...o.about}; if(o.deco) deco=o.deco; }
   async function download(){ try{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([snap()],{type:'application/json'})); a.download='cadangan-tdi-'+new Date().toISOString().slice(0,10)+'.json';
     document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),1000); say('Cadangan diunduh.'); }catch(err){ say('Unduhan gagal.'); } }
   async function restorePrev(){ try{ const p=await db.doc('site/prev').get(); if(!p.exists||!p.data().json) return say('Belum ada versi sebelumnya.');
@@ -1508,6 +1537,10 @@ observeReveal(document);
       body.innerHTML=slides.map((s,i)=>'<div class="adm-row hero"><img src="'+E(src(s)||'')+'" alt=""><div><b>Slide '+(i+1)+'</b><div class="adm-sm">Otomatis 1600 &times; 700 px (landscape)</div><input type="file" accept="image/*" data-hero="'+i+'" style="margin:8px 0">'
         +ACT('h',i,slides.length>1?'<button type="button" class="adm-del" data-h-del="'+i+'">Hapus slide</button>':'')+'</div></div>').join('')
         +(slides.length<8?'<button class="btn btn-outline" type="button" id="admAddH" style="margin-top:16px">+ Tambah slide</button>':'')+'<p class="adm-sm">Maksimal 8 slide. Slide baru wajib diberi foto.</p>';
+    } else if(tab==='deco'){
+      body.innerHTML='<p class="adm-sm" style="margin-bottom:14px">Foto dekorasi melayang di sekitar judul utama halaman (mis. foto daging, sosis, nugget). Foto otomatis tampil di dalam bingkai kartu putih, jadi foto produk biasa (latar apa pun) sudah terlihat rapi. Kosongkan slot yang tidak dipakai. Ukuran otomatis dipotong persegi 200 &times; 200 px. Dekorasi ini disembunyikan otomatis di layar HP sempit.</p>'
+        +deco.map((d,i)=>'<div class="adm-row hero"><img src="'+(d.id?E(blob(d.id)):BLANK)+'" alt=""><div><b>Dekorasi '+(i+1)+'</b><div class="adm-sm">Otomatis 200 &times; 200 px</div><input type="file" accept="image/*" data-deco="'+i+'" style="margin:8px 0">'
+        +(d.id?'<div class="adm-acts"><button type="button" data-d-noicon="'+i+'">Hapus foto</button></div>':'')+'</div></div>').join('');
     } else if(tab==='prod'){
       const ql=q.toLowerCase();
       body.innerHTML=items.map((p,i)=>({p,i})).filter(o=>!ql||(o.p.name+' '+o.p.desc).toLowerCase().includes(ql)).map(({p,i})=>
@@ -1567,7 +1600,8 @@ observeReveal(document);
     if(t.id==='admImport'){ try{ load(JSON.parse(await t.files[0].text())); mark(); say('Cadangan dimuat. Klik Simpan untuk menerapkan.'); render(); }catch(err){ say('File cadangan tidak valid.'); } return; }
     try{ if(t.dataset.aphoto!==undefined){ const i=+t.dataset.aphoto; about.photos[i]=await upload(t.files[0],i===0?800:1000,i===0?1200:800); }
          else if(t.dataset.mphoto!==undefined) media[+t.dataset.mphoto].assetId=await upload(t.files[0],1200,800);
-         else if(t.dataset.cicon!==undefined) cats[+t.dataset.cicon].icon=await upload(t.files[0],64,64);
+         else if(t.dataset.cicon!==undefined) cats[+t.dataset.cicon].icon=await upload(t.files[0],64,64,true);
+         else if(t.dataset.deco!==undefined) deco[+t.dataset.deco].id=await upload(t.files[0],200,200,true);
          else if(t.dataset.hero!==undefined) slides[+t.dataset.hero]={id:await upload(t.files[0],1600,700)};
          else items[+t.dataset.photo].assetId=await upload(t.files[0],800,600);
          mark(); render(); }
@@ -1587,6 +1621,7 @@ observeReveal(document);
       else if(confirm('Hapus kategori ini?')) cats.splice(n('cDel'),1); else c=0; }
     else if(e.target.id==='admAddC') cats.push({key:'kat-'+Date.now().toString(36),name:'Kategori Baru',desc:'',items:[],ik:'daging',icon:''});
     else if(n('cNoicon')!==null) cats[n('cNoicon')].icon='';
+    else if(n('dNoicon')!==null) deco[n('dNoicon')].id='';
     else if(n('aNophoto')!==null) about.photos[n('aNophoto')]='';
     else if(n('mUp')!==null) mv(media,n('mUp'),-1); else if(n('mDn')!==null) mv(media,n('mDn'),1);
     else if(n('mDup')!==null){ const i=n('mDup'); media.splice(i+1,0,{...media[i],title:media[i].title+' (salinan)'}); }
@@ -1604,8 +1639,8 @@ observeReveal(document);
   sv.onclick=async()=>{
     try{ slides=slides.filter(s=>s.id||s.d!==undefined); say('Menyimpan...');
       if(lastJson) await db.doc('site/prev').set({at:Date.now(),json:lastJson});
-      await db.doc('site/hero').set({slides}); await db.doc('site/cats').set({cats}); await db.doc('site/about').set({about}); await db.doc('site/media').set({items:media}); await db.doc('site/products').set({items}); await db.doc('site/settings').set(set); savedAt=Date.now(); await db.doc('site/meta').set({at:savedAt});
-      applyHero(); applyCategories(); applyProducts(); applySettings(); applyMedia(); applyAbout(); lastJson=snap(); dirty=false; sv.disabled=true; say('Tersimpan '+new Date(savedAt).toLocaleTimeString('id-ID')+'. Perubahan langsung tampil di situs.'); render(); }
+      await db.doc('site/hero').set({slides}); await db.doc('site/cats').set({cats}); await db.doc('site/about').set({about}); await db.doc('site/media').set({items:media}); await db.doc('site/products').set({items}); await db.doc('site/settings').set(set); await db.doc('site/deco').set({items:deco}); savedAt=Date.now(); await db.doc('site/meta').set({at:savedAt});
+      applyHero(); applyCategories(); applyProducts(); applySettings(); applyMedia(); applyAbout(); applyDeco(); lastJson=snap(); dirty=false; sv.disabled=true; say('Tersimpan '+new Date(savedAt).toLocaleTimeString('id-ID')+'. Perubahan langsung tampil di situs.'); render(); }
     catch(err){ say('Gagal menyimpan: '+(err.message||err.code)+' (coba muat ulang halaman lalu login lagi)'); } };
 })();
 </script>
