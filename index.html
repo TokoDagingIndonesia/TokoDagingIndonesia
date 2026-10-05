@@ -193,9 +193,13 @@
     width:100vw; position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw;
   }
   .hero-slider{
-    position:relative; width:100%; aspect-ratio:1600/700; /* rasio foto 1600x700: seluruh foto tampil, tidak terpotong */
-    overflow:hidden; background:var(--ink); touch-action:pan-y;
+    position:relative; width:100%; aspect-ratio:1600/700; /* mobile: 1 foto per slide */
+    overflow:hidden; background:#fff; touch-action:pan-y;
   }
+  @media (min-width:769px){ .hero-slider{ aspect-ratio:3200/700; } } /* desktop: 2 foto berdampingan */
+  .hs-slide{ padding:0 8px; box-sizing:border-box; }
+  .hs-slide img{ border-radius:14px; }
+  @media (max-width:768px){ .hs-slide{ padding:0; } .hs-slide img{ border-radius:0; } }
   .hero-slider:focus-visible{ outline:3px solid var(--red); outline-offset:-3px; }
   .hs-track{
     position:absolute; top:0; left:0; height:100%; display:flex; will-change:transform;
@@ -1175,8 +1179,9 @@ function initHeroSlider(){
   const total = originalSlides.length;
   if(total === 0) return { stop:function(){}, start:function(){} };
 
-  const AUTO_MS = 4000;           // durasi tiap slide: 4 detik
+  const AUTO_MS = 3000;           // durasi tiap slide: 3 detik
   const TRANSITION_MS = 700;      // transisi antar-slide: 700ms (dalam rentang 600–800ms)
+  const VISIBLE = window.innerWidth >= 769 ? 2 : 1;   // jumlah foto tampil sekaligus: 2 di desktop, 1 di HP
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* Kloning slide pertama & terakhir agar perpindahan ke ujung terasa seamless (tanpa blank/lompat) */
@@ -1190,7 +1195,7 @@ function initHeroSlider(){
   const items = Array.from(track.children);
   const itemCount = items.length;
   const stepPercent = 100 / itemCount;
-  track.style.width = (itemCount * 100) + '%';
+  track.style.width = (itemCount * 100 / VISIBLE) + '%';
   items.forEach(el => { el.style.width = stepPercent + '%'; });
 
   let current = 1;   // index track untuk slide asli pertama (posisi 0 = klon slide terakhir)
@@ -1324,6 +1329,11 @@ function initHeroSlider(){
   return { stop: stopAuto, start: startAuto };
 }
 var heroSliderControl = initHeroSlider();
+var heroVisibleCount = window.innerWidth >= 769 ? 2 : 1;
+window.addEventListener('resize', ()=>{
+  const v = window.innerWidth >= 769 ? 2 : 1;
+  if(v !== heroVisibleCount){ heroVisibleCount = v; if(typeof applyHero==='function') applyHero(); }
+});
 
 
 /* ============ SCROLL REVEAL ============ */
@@ -1453,6 +1463,14 @@ observeReveal(document);
     if(set.lead) $('.hero p.lead').textContent=set.lead;
     if(set.wa) document.querySelectorAll('[data-lnk="wa"]').forEach(a=>{ a.href=a.getAttribute('href').replace(/wa\.me\/\d+/,'wa.me/'+set.wa.replace(/\D/g,'')); });
     ['shopee','tiktok','instagram'].forEach(k=>{ if(/^https?:\/\//i.test(set[k]||'')) document.querySelectorAll('[data-lnk="'+k+'"]').forEach(a=>{ a.href=set[k]; }); });
+    ['shopee','tiktok'].forEach(k=>{
+      const col=/^#[0-9a-f]{6}$/i.test(set[k+'Color']||'')?set[k+'Color']:defLogoColor[k];
+      document.querySelectorAll('[data-lnk="'+k+'"].btn').forEach(a=>{ a.style.background=col; });
+      document.querySelectorAll('[data-logo="'+k+'"]').forEach(el=>{
+        el.style.background=col+'1A';
+        el.innerHTML=set[k+'Logo']?'<img src="'+E(blob(set[k+'Logo']))+'" alt="" style="width:26px;height:26px;object-fit:contain">':defLogoHtml[k];
+      });
+    });
   }
   function applyCategories(){
     const cur=($('#filterChips .chip.active')||{dataset:{}}).dataset.key||'all';
@@ -1552,7 +1570,7 @@ observeReveal(document);
     if(tab==='hero'){
       body.innerHTML=slides.map((s,i)=>'<div class="adm-row hero"><img src="'+E(src(s)||'')+'" alt=""><div><b>Slide '+(i+1)+'</b><div class="adm-sm">Otomatis 1600 &times; 700 px (landscape)</div><input type="file" accept="image/*" data-hero="'+i+'" style="margin:8px 0">'
         +ACT('h',i,slides.length>1?'<button type="button" class="adm-del" data-h-del="'+i+'">Hapus slide</button>':'')+'</div></div>').join('')
-        +(slides.length<8?'<button class="btn btn-outline" type="button" id="admAddH" style="margin-top:16px">+ Tambah slide</button>':'')+'<p class="adm-sm">Maksimal 8 slide. Slide baru wajib diberi foto.</p>';
+        +(slides.length<12?'<button class="btn btn-outline" type="button" id="admAddH" style="margin-top:16px">+ Tambah slide</button>':'')+'<p class="adm-sm">Maksimal 12 slide. Slide baru wajib diberi foto. Di layar lebar, 2 foto tampil berdampingan; di HP, 1 foto per slide.</p>';
     } else if(tab==='deco'){
       body.innerHTML='<p class="adm-sm" style="margin-bottom:14px">Foto dekorasi melayang di sekitar judul utama halaman (mis. foto daging, sosis, nugget). Foto otomatis tampil di dalam bingkai kartu putih, jadi foto produk biasa (latar apa pun) sudah terlihat rapi. Kosongkan slot yang tidak dipakai. Ukuran otomatis dipotong persegi 200 &times; 200 px. Dekorasi ini disembunyikan otomatis di layar HP sempit.</p>'
         +deco.map((d,i)=>'<div class="adm-row hero"><img src="'+(d.id?E(blob(d.id)):BLANK)+'" alt=""><div><b>Dekorasi '+(i+1)+'</b><div class="adm-sm">Otomatis 200 &times; 200 px</div><input type="file" accept="image/*" data-deco="'+i+'" style="margin:8px 0">'
@@ -1602,7 +1620,13 @@ observeReveal(document);
         +'<p class="adm-sm">Cadangan berisi teks dan referensi foto, dan hanya berlaku di halaman admin ini.</p></div>';
     } else {
       const f=(k,l,t)=>'<label>'+l+(t?'<textarea rows="3" data-s="'+k+'">'+E(set[k])+'</textarea>':'<input data-s="'+k+'" value="'+E(set[k])+'">')+'</label>';
-      body.innerHTML='<div class="adm-set">'+f('title','Judul utama (di bawah slider)')+f('lead','Deskripsi singkat',1)+f('wa','Nomor WhatsApp (format 628xxxxxxxxxx)')+f('shopee','Link Shopee')+f('tiktok','Link TikTok')+f('instagram','Link Instagram')+'</div>'
+      const logoRow=(k,label,defCol)=>'<div><b style="font-size:13.5px">Tampilan kartu '+label+'</b>'
+        +'<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:6px">'
+        +'<input type="color" data-s="'+k+'Color" value="'+(/^#[0-9a-f]{6}$/i.test(set[k+'Color']||'')?set[k+'Color']:defCol)+'" title="Warna '+label+'" style="padding:3px">'
+        +'<img src="'+(set[k+'Logo']?E(blob(set[k+'Logo'])):BLANK)+'" alt="" style="width:36px;height:36px;border-radius:8px;background:#f1efee;object-fit:contain;padding:4px;box-sizing:border-box">'
+        +'<input type="file" accept="image/*" data-logoup="'+k+'" style="width:auto"><span class="adm-sm">Logo kustom (opsional), latar transparan (PNG) paling rapi</span>'
+        +(set[k+'Logo']?'<button type="button" data-nologo="'+k+'">Hapus logo</button>':'')+'</div></div>';
+      body.innerHTML='<div class="adm-set">'+f('title','Judul utama (di bawah slider)')+f('lead','Deskripsi singkat',1)+f('wa','Nomor WhatsApp (format 628xxxxxxxxxx)')+f('shopee','Link Shopee')+logoRow('shopee','Shopee','#EE4D2D')+f('tiktok','Link TikTok')+logoRow('tiktok','TikTok','#161617')+f('instagram','Link Instagram')+'</div>'
         +'<hr style="margin:22px 0;border:none;border-top:1px solid var(--line)">'
         +'<h4 style="margin-bottom:10px">Link belanja tambahan</h4><p class="adm-sm" style="margin-bottom:14px">Muncul sebagai kartu baru di bagian "Beli Sekarang", di samping Shopee dan TikTok. Contoh: Tokopedia, Lazada, Blibli, atau toko online lainnya.</p>'
         +links.map((l,i)=>'<div class="adm-row"><div class="adm-f">'
@@ -1631,6 +1655,7 @@ observeReveal(document);
          else if(t.dataset.cicon!==undefined) cats[+t.dataset.cicon].icon=await upload(t.files[0],64,64,true);
          else if(t.dataset.deco!==undefined) deco[+t.dataset.deco].id=await upload(t.files[0],200,200,true);
          else if(t.dataset.llogo!==undefined) links[+t.dataset.llogo].logo=await upload(t.files[0],64,64,true);
+         else if(t.dataset.logoup) set[t.dataset.logoup+'Logo']=await upload(t.files[0],64,64,true);
          else if(t.dataset.hero!==undefined) slides[+t.dataset.hero]={id:await upload(t.files[0],1600,700)};
          else items[+t.dataset.photo].assetId=await upload(t.files[0],800,600);
          mark(); render(); }
@@ -1652,6 +1677,7 @@ observeReveal(document);
     else if(n('cNoicon')!==null) cats[n('cNoicon')].icon='';
     else if(n('dNoicon')!==null) deco[n('dNoicon')].id='';
     else if(n('lNologo')!==null) links[n('lNologo')].logo='';
+    else if(d.nologo) set[d.nologo+'Logo']='';
     else if(n('aNophoto')!==null) about.photos[n('aNophoto')]='';
     else if(n('mUp')!==null) mv(media,n('mUp'),-1); else if(n('mDn')!==null) mv(media,n('mDn'),1);
     else if(n('mDup')!==null){ const i=n('mDup'); media.splice(i+1,0,{...media[i],title:media[i].title+' (salinan)'}); }
