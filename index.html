@@ -572,6 +572,15 @@
   #adminBtn{ position:fixed; right:18px; bottom:18px; z-index:400; background:var(--ink); color:#fff; border:0; border-radius:999px; padding:13px 20px; font-weight:700; font-size:14px; box-shadow:0 10px 30px -10px rgba(0,0,0,.5); }
   #adminOverlay{ position:fixed; inset:0; z-index:600; background:rgba(20,18,17,.7); display:flex; align-items:center; justify-content:center; padding:16px; }
   #adminOverlay[hidden], #adminBtn[hidden]{ display:none; }
+  .ad-popup{ position:fixed; inset:0; z-index:650; display:flex; align-items:center; justify-content:center; padding:20px; }
+  .ad-popup[hidden]{ display:none; }
+  .ad-popup-backdrop{ position:absolute; inset:0; background:rgba(20,18,17,.68); }
+  .ad-popup-card{ position:relative; max-width:420px; width:100%; max-height:88vh; animation:adPopIn .28s ease-out; }
+  .ad-popup-card img{ width:100%; max-height:88vh; object-fit:contain; border-radius:14px; display:block; box-shadow:0 30px 60px -20px rgba(0,0,0,.5); }
+  .ad-popup-x{ position:absolute; top:-14px; right:-14px; width:34px; height:34px; border-radius:50%; background:#fff; color:var(--ink); border:none; font-size:20px; line-height:1; cursor:pointer; box-shadow:0 6px 16px rgba(0,0,0,.3); }
+  .ad-popup-x:hover{ background:var(--red); color:#fff; }
+  @keyframes adPopIn{ from{ opacity:0; transform:scale(.92); } to{ opacity:1; transform:scale(1); } }
+  @media (max-width:480px){ .ad-popup-card{ max-width:92vw; } }
   .adm-box{ background:#fff; width:100%; max-width:860px; max-height:92vh; border-radius:16px; display:flex; flex-direction:column; overflow:hidden; }
   .adm-head{ display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--line); }
   .adm-head h3{ font-size:18px; }
@@ -687,8 +696,8 @@
       <a href="#beli-sekarang" class="btn btn-outline">Beli Sekarang</a>
     </div>
     <div class="hero-stats">
-      <div><b>6</b><span>Kategori Produk</span></div>
-      <div><b>2</b><span>Marketplace Resmi</span></div>
+      <div><b data-stat="cat">6</b><span>Kategori Produk</span></div>
+      <div><b data-stat="mp">2</b><span>Marketplace Resmi</span></div>
       <div><b>100%</b><span>Kualitas Terjaga</span></div>
     </div>
   </div>
@@ -1350,6 +1359,13 @@ observeReveal(document);
 </script>
 <!-- ======================= PANEL ADMIN INTERNAL (database + upload foto) ======================= -->
 <button id="adminBtn" type="button" hidden>&#9881; Kelola Konten</button>
+<div id="adPopup" class="ad-popup" hidden>
+  <div class="ad-popup-backdrop"></div>
+  <div class="ad-popup-card">
+    <button type="button" id="adClose" class="ad-popup-x" aria-label="Tutup iklan">&times;</button>
+    <a id="adLink" href="#" target="_blank" rel="noopener"><img id="adImgEl" alt="Promo"></a>
+  </div>
+</div>
 <div id="adminOverlay" hidden><div class="adm-box">
   <div class="adm-head"><h3>Kelola Konten TDI</h3><button class="adm-del" id="admClose" type="button" style="color:var(--ink)">Tutup</button></div>
   <div class="adm-tabs"><button type="button" data-t="hero" class="on">Foto Slider</button><button type="button" data-t="prod">Produk</button><button type="button" data-t="cat">Kategori</button><button type="button" data-t="deco">Dekorasi</button><button type="button" data-t="about">Tentang</button><button type="button" data-t="media">Media</button><button type="button" data-t="set">Teks &amp; Link</button><button type="button" data-t="bak">Cadangan</button></div>
@@ -1475,6 +1491,7 @@ observeReveal(document);
   function applyCategories(){
     const cur=($('#filterChips .chip.active')||{dataset:{}}).dataset.key||'all';
     categories.splice(0,categories.length,...cats.map(c=>({key:c.key,name:E(c.name),desc:E(c.desc),items:c.items.map(E),icon:defIcons[c.ik]||defIcons.daging||'',customIcon:c.icon||''})));
+    updateStats();
     categoryGrid.innerHTML='';
     categories.forEach(c=>{ const card=document.createElement('div'); card.className='cat-card';
       card.innerHTML='<div class="cat-icon">'+(c.customIcon?'<img src="'+E(blob(c.customIcon))+'" alt="" style="width:26px;height:26px;object-fit:contain">':'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.7">'+c.icon+'</svg>')+'</div><h3>'+c.name+'</h3><p>'+c.desc+'</p><div class="cat-items">'+c.items.map(i=>'<span>'+i+'</span>').join('')+'</div><div class="cat-link">Lihat Produk<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>';
@@ -1496,6 +1513,28 @@ observeReveal(document);
     mediaItems.splice(0,mediaItems.length,...media);
     const a=$('#mediaTabs .chip.active'); renderMedia(a?a.dataset.key:'all');
   }
+  function applyAdPopup(force){
+    const pop=$('#adPopup'); if(!pop) return;
+    if(!set.adOn||!set.adImg){ pop.hidden=true; return; }
+    if(!force&&sessionStorage.getItem('tdi_ad_seen')==='1') return;
+    $('#adImgEl').src=blob(set.adImg);
+    const link=$('#adLink');
+    if(/^https?:\/\//i.test(set.adUrl||'')){ link.href=set.adUrl; link.style.cursor='pointer'; }
+    else { link.removeAttribute('href'); link.style.cursor='default'; }
+    pop.hidden=false;
+  }
+  (function initAdPopup(){
+    const pop=$('#adPopup'); if(!pop) return;
+    const close=()=>{ pop.hidden=true; try{ sessionStorage.setItem('tdi_ad_seen','1'); }catch(e){} };
+    $('#adClose').addEventListener('click',close);
+    pop.querySelector('.ad-popup-backdrop').addEventListener('click',close);
+    $('#adLink').addEventListener('click',()=>close());
+  })();
+  function updateStats(){
+    const c=$('[data-stat="cat"]'), m=$('[data-stat="mp"]'); if(!c||!m) return;
+    c.textContent=cats.length;
+    m.textContent=2+links.filter(l=>l.label&&/^https?:\/\//i.test(l.url||'')).length;   // 2 = Shopee + TikTok bawaan
+  }
   function applyDeco(){
     const hd=$('#heroDeco'); if(!hd) return;
     hd.innerHTML=deco.filter(d=>d.id).map(d=>'<div class="deco-card"><img src="'+E(blob(d.id))+'" alt=""></div>').join('');
@@ -1511,6 +1550,7 @@ observeReveal(document);
         +'<a class="btn btn-primary" style="background:'+col+';" target="_blank" rel="noopener" href="'+E(l.url)+'">Belanja di '+E(l.label)+'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></a>';
       grid.appendChild(el);
     });
+    updateStats();
   }
   window.renderMedia=function(k){                        // galeri media: mendukung foto
     mediaGrid.innerHTML='';
@@ -1533,6 +1573,7 @@ observeReveal(document);
     const h=await db.doc('site/hero').get(); if(h.exists&&h.data().slides){ slides=h.data().slides; applyHero(); }
     const p=await db.doc('site/products').get(); if(p.exists&&p.data().items){ items=p.data().items; applyProducts(); }
     const s=await db.doc('site/settings').get(); if(s.exists){ set={...defSet,...s.data()}; applySettings(); }
+    setTimeout(()=>applyAdPopup(),900);
     const m=await db.doc('site/media').get(); if(m.exists&&m.data().items){ media=m.data().items; applyMedia(); }
     const dc=await db.doc('site/deco').get(); if(dc.exists&&dc.data().items){ deco=dc.data().items; applyDeco(); }
     const lk=await db.doc('site/links').get(); if(lk.exists&&lk.data().items){ links=lk.data().items; applyLinks(); }
@@ -1557,6 +1598,12 @@ observeReveal(document);
       if(keepAlpha) c.toBlob(b=>b?ok(b):no(new Error('gagal')),'image/png'); else c.toBlob(b=>b?ok(b):no(new Error('gagal')),'image/jpeg',.85); };
     im.onerror=()=>no(new Error('File bukan gambar')); im.src=u; }); }
   async function upload(file,w,h,keepAlpha){ say('Mengunggah foto...'); const r=await assets.upload(await crop(file,w,h,keepAlpha)); return r.id; }
+  function fitImg(file,maxDim){ return new Promise((ok,no)=>{ const im=new Image(), u=URL.createObjectURL(file);
+    im.onload=()=>{ const r=Math.min(1,maxDim/Math.max(im.width,im.height)), w=Math.round(im.width*r), h=Math.round(im.height*r);
+      const c=document.createElement('canvas'); c.width=w; c.height=h; c.getContext('2d').drawImage(im,0,0,w,h); URL.revokeObjectURL(u);
+      c.toBlob(b=>b?ok(b):no(new Error('gagal')),'image/jpeg',.88); };
+    im.onerror=()=>no(new Error('File bukan gambar')); im.src=u; }); }
+  async function uploadFree(file,maxDim){ say('Mengunggah foto...'); const r=await assets.upload(await fitImg(file,maxDim)); return r.id; }
 
   function load(o){ if(o.slides) slides=o.slides; if(o.items) items=o.items; if(o.set) set={...defSet,...o.set}; if(o.media) media=o.media; if(o.cats) cats=o.cats; if(o.about) about={...about,...o.about}; if(o.deco) deco=o.deco; if(o.links) links=o.links; }
   async function download(){ try{ const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([snap()],{type:'application/json'})); a.download='cadangan-tdi-'+new Date().toISOString().slice(0,10)+'.json';
@@ -1628,6 +1675,12 @@ observeReveal(document);
         +(set[k+'Logo']?'<button type="button" data-nologo="'+k+'">Hapus logo</button>':'')+'</div></div>';
       body.innerHTML='<div class="adm-set">'+f('title','Judul utama (di bawah slider)')+f('lead','Deskripsi singkat',1)+f('wa','Nomor WhatsApp (format 628xxxxxxxxxx)')+f('shopee','Link Shopee')+logoRow('shopee','Shopee','#EE4D2D')+f('tiktok','Link TikTok')+logoRow('tiktok','TikTok','#161617')+f('instagram','Link Instagram')+'</div>'
         +'<hr style="margin:22px 0;border:none;border-top:1px solid var(--line)">'
+        +'<h4 style="margin-bottom:10px">Iklan pop-up</h4><p class="adm-sm" style="margin-bottom:14px">Muncul sebagai jendela promo saat pengunjung membuka situs (sekali per kunjungan), dengan tombol &times; untuk menutup. Ukuran foto bebas, tidak dipotong paksa.</p>'
+        +'<label style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:13.5px;margin-bottom:12px"><input type="checkbox" data-s="adOn"'+(set.adOn?' checked':'')+' style="width:auto"> Aktifkan iklan pop-up</label>'
+        +'<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px"><img src="'+(set.adImg?E(blob(set.adImg)):BLANK)+'" alt="" style="width:64px;height:64px;border-radius:8px;background:#f1efee;object-fit:contain;padding:4px;box-sizing:border-box">'
+        +'<input type="file" accept="image/*" id="admAdUp" style="width:auto"><span class="adm-sm">Foto iklan (JPG/PNG)</span>'+(set.adImg?'<button type="button" id="admAdNo">Hapus foto</button>':'')+'</div>'
+        +'<label>Link tujuan saat foto diklik (opsional)<input data-s="adUrl" value="'+E(set.adUrl||'')+'" placeholder="https://..."></label>'
+        +'<hr style="margin:22px 0;border:none;border-top:1px solid var(--line)">'
         +'<h4 style="margin-bottom:10px">Link belanja tambahan</h4><p class="adm-sm" style="margin-bottom:14px">Muncul sebagai kartu baru di bagian "Beli Sekarang", di samping Shopee dan TikTok. Contoh: Tokopedia, Lazada, Blibli, atau toko online lainnya.</p>'
         +links.map((l,i)=>'<div class="adm-row"><div class="adm-f">'
           +'<input data-li="'+i+'" data-lf="label" value="'+E(l.label)+'" placeholder="Nama toko, mis. Tokopedia">'
@@ -1641,7 +1694,7 @@ observeReveal(document);
     }
   }
   body.addEventListener('input',e=>{ const t=e.target;
-    if(t.dataset.s){ set[t.dataset.s]=t.value; mark(); }
+    if(t.dataset.s){ set[t.dataset.s]=t.type==='checkbox'?t.checked:t.value; mark(); }
     else if(t.dataset.af){ about[t.dataset.af]=t.value; mark(); }
     else if(t.dataset.al!==undefined){ about.labels[+t.dataset.al]=t.value; mark(); }
     else if(t.dataset.cf){ const c=cats[+t.dataset.ci]; c[t.dataset.cf]=t.dataset.cf==='items'?t.value.split(',').map(s=>s.trim()).filter(Boolean):t.value; mark(); }
@@ -1656,6 +1709,7 @@ observeReveal(document);
          else if(t.dataset.deco!==undefined) deco[+t.dataset.deco].id=await upload(t.files[0],200,200,true);
          else if(t.dataset.llogo!==undefined) links[+t.dataset.llogo].logo=await upload(t.files[0],64,64,true);
          else if(t.dataset.logoup) set[t.dataset.logoup+'Logo']=await upload(t.files[0],64,64,true);
+         else if(t.id==='admAdUp') set.adImg=await uploadFree(t.files[0],900);
          else if(t.dataset.hero!==undefined) slides[+t.dataset.hero]={id:await upload(t.files[0],1600,700)};
          else items[+t.dataset.photo].assetId=await upload(t.files[0],800,600);
          mark(); render(); }
@@ -1687,6 +1741,7 @@ observeReveal(document);
     else if(n('lUp')!==null) mv(links,n('lUp'),-1); else if(n('lDn')!==null) mv(links,n('lDn'),1);
     else if(n('lDel')!==null){ if(confirm('Hapus link ini?')) links.splice(n('lDel'),1); else c=0; }
     else if(e.target.id==='admAddL') links.push({label:'',url:''});
+    else if(e.target.id==='admAdNo') set.adImg='';
     else if(e.target.id==='admDl'){ c=0; download(); }
     else if(e.target.id==='admPrev'){ c=0; restorePrev(); }
     else c=0;
@@ -1699,7 +1754,7 @@ observeReveal(document);
     try{ slides=slides.filter(s=>s.id||s.d!==undefined); say('Menyimpan...');
       if(lastJson) await db.doc('site/prev').set({at:Date.now(),json:lastJson});
       await db.doc('site/hero').set({slides}); await db.doc('site/cats').set({cats}); await db.doc('site/about').set({about}); await db.doc('site/media').set({items:media}); await db.doc('site/products').set({items}); await db.doc('site/settings').set(set); await db.doc('site/deco').set({items:deco}); await db.doc('site/links').set({items:links}); savedAt=Date.now(); await db.doc('site/meta').set({at:savedAt});
-      applyHero(); applyCategories(); applyProducts(); applySettings(); applyMedia(); applyAbout(); applyDeco(); applyLinks(); lastJson=snap(); dirty=false; sv.disabled=true; say('Tersimpan '+new Date(savedAt).toLocaleTimeString('id-ID')+'. Perubahan langsung tampil di situs.'); render(); }
+      applyHero(); applyCategories(); applyProducts(); applySettings(); applyMedia(); applyAbout(); applyDeco(); applyLinks(); applyAdPopup(true); lastJson=snap(); dirty=false; sv.disabled=true; say('Tersimpan '+new Date(savedAt).toLocaleTimeString('id-ID')+'. Perubahan langsung tampil di situs.'); render(); }
     catch(err){ say('Gagal menyimpan: '+(err.message||err.code)+' (coba muat ulang halaman lalu login lagi)'); } };
 })();
 </script>
