@@ -1,1 +1,238 @@
-
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Video Produk Baru – 15 Detik</title>
+<style>
+:root{--bg:#f6f4ef;--fg:#1d1d1b;--ac:#c8372d;--mut:#6b6a66;--card:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#161615;--fg:#f3f1ec;--ac:#ff6a5c;--mut:#a09e98;--card:#232321;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#161615;--fg:#f3f1ec;--ac:#ff6a5c;--mut:#a09e98;--card:#232321;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;padding:16px}
+.wrap{max-width:960px;margin:0 auto}
+.stage{position:relative;aspect-ratio:16/9;color:#fff;font-family:var(--ff,inherit);background:linear-gradient(135deg,var(--g1,#2b1055),var(--g2,#7a2a6e) 45%,var(--g3,#e0483c));background-size:200% 200%;animation:gs 8s ease-in-out infinite alternate;border-radius:14px;overflow:hidden;container-type:inline-size}
+@keyframes gs{from{background-position:0% 50%}to{background-position:100% 50%}}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-2.4cqw) rotate(2deg)}}
+.sc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;transform:translateY(3cqw);transition:opacity .5s,transform .5s;padding:4cqw}
+.sc.on{opacity:1;transform:none}
+.sc[data-s="12.3"]{transform:none}
+.sc[data-s="12.3"]>:not(.logo){transform:scale(.9)}
+.sc.on[data-s="12.3"]>:not(.logo){transform:scale(1);transition:transform 1.3s cubic-bezier(.45,0,.2,1)}
+.row{flex-direction:row;gap:3cqw;text-align:left}
+.bgb{position:absolute;inset:-6cqw;z-index:-1;opacity:0;filter:blur(4cqw);will-change:filter,transform,opacity;background:radial-gradient(circle at 20% 30%,rgba(255,255,255,.25),transparent 40%),radial-gradient(circle at 80% 70%,rgba(255,255,255,.18),transparent 45%);background-size:cover;background-position:center}
+.logo{position:relative;left:calc(var(--lx,0)*1cqw);top:calc(var(--ly,0)*1cqw);height:calc(12cqw*var(--ls,1));margin-bottom:1.5cqw;display:flex}.logo:empty{display:none}
+.txt{min-width:0;max-width:calc(89cqw - 44cqw*var(--ps,1))}
+.fo{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;z-index:5}
+select{font:inherit;padding:8px 10px;border-radius:8px;border:1px solid color-mix(in srgb,var(--fg) 20%,transparent);background:var(--card);color:var(--fg)}
+.logo img{height:100%;width:auto;max-width:40cqw;object-fit:contain;filter:drop-shadow(0 .6cqw 1cqw rgba(0,0,0,.3))}
+input[type=color]{padding:2px;height:38px;cursor:pointer}
+textarea{display:none;width:100%;height:230px;font:12px ui-monospace,Menlo,monospace;padding:10px;border-radius:8px;border:1px solid color-mix(in srgb,var(--fg) 20%,transparent);background:var(--card);color:var(--fg)}
+.big{font-size:calc(7cqw*var(--ts,1));font-weight:800;letter-spacing:-.02em;margin:0}
+.sub{font-size:calc(2.6cqw*var(--bs,1));color:rgba(255,255,255,.82);margin:1.4cqw 0 0}
+.tag{font-size:calc(2cqw*var(--bs,1));letter-spacing:.3em;text-transform:uppercase;color:#ffd9a0;font-weight:700;margin-bottom:2cqw}
+.prod{position:relative;left:calc(var(--px,0)*1cqw);top:calc(var(--py,0)*1cqw);flex:none;width:calc(44cqw*var(--ps,1));height:calc(44cqw*var(--ps,1));background:radial-gradient(circle,rgba(255,255,255,.28),transparent 70%);display:flex;align-items:center;justify-content:center;font-size:18cqw;animation:float 3.2s ease-in-out infinite}
+.prod img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 2cqw 2cqw rgba(0,0,0,.35))}
+.pts{display:flex;gap:3cqw;margin-top:3cqw}
+.pt{background:rgba(255,255,255,.16);border-radius:2cqw;padding:2.4cqw 3cqw;font-size:calc(2.6cqw*var(--bs,1));font-weight:700;opacity:0;transform:translateY(2cqw);transition:all .5s}
+.sc.on .pt{opacity:1;transform:none}
+.sc.on .pt:nth-child(2){transition-delay:.4s}.sc.on .pt:nth-child(3){transition-delay:.8s}
+.cta{background:#fff;color:#b42a22;font-weight:800;font-size:calc(3cqw*var(--bs,1));padding:1.6cqw 4cqw;border-radius:99px;margin-top:3cqw}
+.bar{position:absolute;left:0;bottom:0;height:.8cqw;width:0;background:#fff}
+.ctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0}
+button{font:inherit;font-weight:600;padding:9px 18px;border-radius:99px;border:0;background:var(--ac);color:#fff;cursor:pointer}
+.t{color:var(--mut);font-variant-numeric:tabular-nums}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+label{font-size:13px;color:var(--mut);display:flex;flex-direction:column;gap:4px}
+input{font:inherit;padding:8px 10px;border-radius:8px;border:1px solid color-mix(in srgb,var(--fg) 20%,transparent);background:var(--card);color:var(--fg)}
+p.note{font-size:13px;color:var(--mut)}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&family=Nunito:wght@400;700;800&family=Oswald:wght@400;700&family=Playfair+Display:wght@400;700;800&family=Poppins:wght@400;700;800&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.3/build/mp4-muxer.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <div class="stage" id="stage"><div class="bgb" id="o-bgb"></div>
+    <div class="sc" data-s="0" data-e="3"><div class="tag" id="o-badge">Segera Hadir</div><h1 class="big" id="o-tagline">Rasa baru, hadir untukmu</h1></div>
+    <div class="sc row" data-s="3" data-e="8"><div class="prod" id="o-img">🛍️</div><div class="txt"><h2 class="big" id="o-name">Nama Produk</h2><p class="sub" id="o-desc">Deskripsi singkat produk</p></div></div>
+    <div class="sc" data-s="8" data-e="12"><div class="tag">Kenapa Pilih Ini</div><div class="pts"><div class="pt" id="o-p1">Berkualitas</div><div class="pt" id="o-p2">Harga bersahabat</div><div class="pt" id="o-p3">Praktis</div></div></div>
+    <div class="sc" data-s="12.3" data-e="14.8"><div class="logo" id="o-logo"></div><h2 class="big" id="o-name2">Kualitas terbaik untukmu</h2><p class="sub" id="o-end">www.tokokamu.com</p><div class="cta" id="o-cta">Pesan sekarang</div></div>
+    <div class="bar" id="bar"></div><div class="fo" id="o-fo"></div>
+  </div>
+  <div class="ctl"><button id="pp">⏸ Jeda</button><button id="play">▶ Putar ulang</button><button id="dl">⬇ Unduh video</button><span class="t" id="time">0.0 / 15 dtk</span></div>
+  <input type="range" id="sk" min="0" max="15" step="0.05" value="0" style="width:100%;margin:0 0 12px;padding:0;border:0;background:none" aria-label="Geser waktu video">
+  <div class="form">
+    <label>Nama produk<input id="i-name" value="Nama Produk"></label>
+    <label>Font<select id="i-font"><option>Bawaan</option><option>Poppins</option><option>Montserrat</option><option>Playfair Display</option><option>Oswald</option><option>Nunito</option></select></label>
+    <label>Ukuran judul<input id="i-ts" type="range" min="70" max="130" step="5" value="100"></label>
+    <label>Ukuran teks<input id="i-bs" type="range" min="70" max="130" step="5" value="100"></label>
+    <label>Ukuran produk<input id="i-ps" type="range" min="40" max="150" step="5" value="100"></label>
+    <label>Ukuran logo<input id="i-ls" type="range" min="30" max="200" step="5" value="100"></label>
+    <label>Posisi produk: kiri ↔ kanan<input id="i-px" type="range" min="-40" max="40" step="1" value="0"></label>
+    <label>Posisi produk: atas ↕ bawah<input id="i-py" type="range" min="-30" max="30" step="1" value="0"></label>
+    <label>Posisi logo: kiri ↔ kanan<input id="i-lx" type="range" min="-40" max="40" step="1" value="0"></label>
+    <label>Posisi logo: atas ↕ bawah<input id="i-ly" type="range" min="-30" max="30" step="1" value="0"></label>
+    <label>Warna gradient 1<input id="i-g1" type="color" value="#2b1055"></label>
+    <label>Warna gradient 2<input id="i-g2" type="color" value="#7a2a6e"></label>
+    <label>Warna gradient 3<input id="i-g3" type="color" value="#e0483c"></label>
+    <label>Label atas (Segera Hadir)<input id="i-badge" value="Segera Hadir"></label>
+    <label>Kalimat pembuka<input id="i-tag" value="Rasa baru, hadir untukmu"></label>
+    <label>Deskripsi singkat<input id="i-desc" value="Deskripsi singkat produk"></label>
+    <label>Keunggulan 1<input id="i-p1" value="Berkualitas"></label>
+    <label>Keunggulan 2<input id="i-p2" value="Harga bersahabat"></label>
+    <label>Keunggulan 3<input id="i-p3" value="Praktis"></label>
+    <label>Ajakan (CTA)<input id="i-cta" value="Pesan sekarang"></label>
+    <label>Foto produk (unggah)<input id="i-img" type="file" accept="image/*"></label>
+    <label>Tagline penutup<input id="i-tl" value="Kualitas terbaik untukmu"></label>
+    <label>Teks penutup (web / WA)<input id="i-end" value="www.tokokamu.com"></label>
+    <label>Logo (unggah)<input id="i-logo" type="file" accept="image/*"></label>
+  </div>
+  <div class="ctl"><button id="cp">Salin pengaturan</button><button id="rs">Reset ke bawaan</button></div>
+  <textarea id="cfg" readonly></textarea>
+  <p class="note">Rekam layar saat video diputar (resolusi 1920×1080) untuk mengunggahnya ke YouTube. Untuk hasil terbaik, gunakan foto produk berlatar transparan (PNG). Agar tersimpan permanen: klik Salin pengaturan, tempel hasilnya menggantikan blok CONFIG di bagian atas script pada index.html di GitHub, unggah file foto ke repository, lalu isi nama filenya pada baris foto.</p>
+</div>
+<script>
+/* ===== PENGATURAN: ubah isi di sini, lalu simpan (Commit) ===== */
+var CONFIG={
+  badge:'Segera Hadir',
+  pembuka:'Rasa baru, hadir untukmu',
+  nama:'Nama Produk',
+  deskripsi:'Deskripsi singkat produk',
+  p1:'Berkualitas',
+  p2:'Harga bersahabat',
+  p3:'Praktis',
+  cta:'Pesan sekarang',
+  g1:'#2b1055',
+  g2:'#7a2a6e',
+  g3:'#e0483c',
+  font:'Bawaan',
+  judul:100,
+  teks:100,
+  ukuranProduk:100,
+  ukuranLogo:100,
+  posProdukX:0,
+  posProdukY:0,
+  posLogoX:0,
+  posLogoY:0,
+  tagline:'Kualitas terbaik untukmu',
+  akhir:'www.tokokamu.com',
+  logo:'', /* nama file logo di repository, contoh: 'logo.png' */
+  foto:'' /* nama file foto di repository, contoh: 'produk.png' */
+};
+/* ===== selesai ===== */
+var scs=[].slice.call(document.querySelectorAll('.sc')),bar=document.getElementById('bar'),tm=document.getElementById('time'),t0=null,raf,off=0,cur=0,paused=false;
+function $(i){return document.getElementById(i)}
+var map={'i-end':['o-end'],'i-badge':['o-badge'],'i-name':['o-name'],'i-tl':['o-name2'],'i-tag':['o-tagline'],'i-desc':['o-desc'],'i-p1':['o-p1'],'i-p2':['o-p2'],'i-p3':['o-p3'],'i-cta':['o-cta']};
+Object.keys(map).forEach(function(k){$(k).addEventListener('input',function(){map[k].forEach(function(o){$(o).textContent=$(k).value})})});
+$('i-img').addEventListener('change',function(){var f=this.files&&this.files[0];if(!f){$('o-img').textContent='🛍️';return}var r=new FileReader();r.onload=function(){var im=document.createElement('img');im.alt='';im.src=r.result;$('o-img').textContent='';$('o-img').appendChild(im)};r.readAsDataURL(f)});
+['g1','g2','g3'].forEach(function(k){$('i-'+k).addEventListener('input',function(){$('stage').style.setProperty('--'+k,this.value)})});
+var ids={font:'i-font',judul:'i-ts',teks:'i-bs',ukuranProduk:'i-ps',ukuranLogo:'i-ls',posProdukX:'i-px',posProdukY:'i-py',posLogoX:'i-lx',posLogoY:'i-ly',tagline:'i-tl',akhir:'i-end',badge:'i-badge',pembuka:'i-tag',nama:'i-name',deskripsi:'i-desc',p1:'i-p1',p2:'i-p2',p3:'i-p3',cta:'i-cta',g1:'i-g1',g2:'i-g2',g3:'i-g3'};
+Object.keys(ids).forEach(function(k){var el=$(ids[k]);el.value=CONFIG[k];el.dispatchEvent(new Event('input'))});
+if(CONFIG.foto){var im0=document.createElement('img');im0.alt='';im0.src=CONFIG.foto;$('o-img').textContent='';$('o-img').appendChild(im0)}
+$('cp').addEventListener('click',function(){var o={};Object.keys(ids).forEach(function(k){o[k]=$(ids[k]).value});o.logo=CONFIG.logo;o.foto=CONFIG.foto;var txt='var CONFIG='+JSON.stringify(o,null,2)+';';var ta=$('cfg');ta.value=txt;ta.style.display='block';ta.select();try{navigator.clipboard.writeText(txt)}catch(e){}});
+function setLogo(src){var o=$('o-logo');o.textContent='';if(src){var im=new Image();im.alt='';im.src=src;o.appendChild(im)}}
+setLogo(CONFIG.logo);
+$('i-logo').addEventListener('change',function(){var f=this.files&&this.files[0];if(!f){setLogo('');return}var r=new FileReader();r.onload=function(){setLogo(r.result)};r.readAsDataURL(f)});
+function setBg(){var im=document.querySelector('#o-img img');$('o-bgb').style.backgroundImage=im?'linear-gradient(rgba(0,0,0,.3),rgba(0,0,0,.3)),url("'+im.src+'")':''}
+function mkBlur(im,r){var w=480,h=270,c=document.createElement('canvas');c.width=w;c.height=h;var o=c.getContext('2d'),k=Math.max(w/im.naturalWidth,h/im.naturalHeight)*1.3,iw=im.naturalWidth*k,ih=im.naturalHeight*k;o.imageSmoothingEnabled=true;o.imageSmoothingQuality='high';
+ if('filter' in o){o.filter='blur('+r+'px)';o.drawImage(im,(w-iw)/2,(h-ih)/2,iw,ih);o.filter='none';return c}
+ var bw=r>12?30:120,f=bw/w,t=document.createElement('canvas');t.width=bw;t.height=Math.round(bw*9/16);t.getContext('2d').drawImage(im,(w-iw)/2*f,(h-ih)/2*f,iw*f,ih*f);
+ for(var z=bw*2;z<=480;z*=2){var n=document.createElement('canvas');n.width=z;n.height=Math.round(z*9/16);var m=n.getContext('2d');m.imageSmoothingQuality='high';m.drawImage(t,0,0,n.width,n.height);t=n}
+ return t}
+function ez(x){x=cl(x);return x*x*(3-2*x)}
+function bgDom(t){$('o-fo').style.opacity=ez((t-14)/1);var B=$('o-bgb'),a=ez((t-11.6)/1.6),b=ez((t-12.2)/2.4);B.style.opacity=0;B.style.filter='blur('+(0.6+3.4*b).toFixed(2)+'cqw)';B.style.transform='scale('+(1+.08*cl((t-11.6)/3.4)).toFixed(4)+')'}
+function bgBlur(t){return;var a=ez((t-11.6)/1.6),b=ez((t-12.2)/2.4);if(a<=0)return;var im=document.querySelector('#o-img img'),W=1920,H=1080,s=1+.08*cl((t-11.6)/3.4);
+ cx.save();cx.translate(W/2,H/2);cx.scale(s,s);cx.translate(-W/2,-H/2);cx.imageSmoothingEnabled=true;cx.imageSmoothingQuality='high';
+ if(im&&im.naturalWidth){if(bgBlur.s!==im.src){bgBlur.s=im.src;bgBlur.m=mkBlur(im,5);bgBlur.c=mkBlur(im,26)}
+  cx.globalAlpha=a;cx.drawImage(bgBlur.m,-120,-120,W+240,H+240);cx.globalAlpha=a*b;cx.drawImage(bgBlur.c,-120,-120,W+240,H+240);cx.globalAlpha=a;cx.fillStyle='rgba(0,0,0,.3)';cx.fillRect(-120,-120,W+240,H+240)}
+ else{cx.globalAlpha=a;[[.2,.3,.25],[.8,.7,.18]].forEach(function(p){var r=cx.createRadialGradient(W*p[0],H*p[1],0,W*p[0],H*p[1],W*.4);r.addColorStop(0,'rgba(255,255,255,'+p[2]+')');r.addColorStop(1,'rgba(255,255,255,0)');cx.fillStyle=r;cx.fillRect(-120,-120,W+240,H+240)})}
+ cx.restore()}
+function bgBlurOld(){var im=document.querySelector('#o-img img'),W=1920,H=1080;
+ if(im&&im.naturalWidth){if(bgBlur.s!==im.src){bgBlur.s=im.src;bgBlur.c=mkBlur(im)}cx.imageSmoothingEnabled=true;cx.imageSmoothingQuality='high';cx.drawImage(bgBlur.c,-120,-120,W+240,H+240);cx.fillStyle='rgba(0,0,0,.3)';cx.fillRect(-120,-120,W+240,H+240)}
+ else{[[.2,.3,.25],[.8,.7,.18]].forEach(function(p){var r=cx.createRadialGradient(W*p[0],H*p[1],0,W*p[0],H*p[1],W*.4);r.addColorStop(0,'rgba(255,255,255,'+p[2]+')');r.addColorStop(1,'rgba(255,255,255,0)');cx.fillStyle=r;cx.fillRect(-120,-120,W+240,H+240)})}}
+var cv=document.createElement('canvas');cv.width=1920;cv.height=1080;var cx=cv.getContext('2d'),F='system-ui,-apple-system,"Segoe UI",sans-serif';
+var TS=1,BS=1,PS=1,LS=1,PX=0,PY=0,LX=0,LY=0;
+(function(){var d=Object.getOwnPropertyDescriptor(CanvasRenderingContext2D.prototype,'font');Object.defineProperty(cx,'font',{get:function(){return d.get.call(cx)},set:function(v){var m=/^(\d+) (\d+)px (.*)$/.exec(v);if(m){var z=+m[2];z=z>=300?z:(z>=100?z*TS:z*BS);v=m[1]+' '+Math.round(z)+'px '+m[3]}d.set.call(cx,v)}})})();
+function applyFont(){var n=$('i-font').value,f=n=='Bawaan'?'system-ui,-apple-system,"Segoe UI",sans-serif':"'"+n+"',sans-serif";F=f;$('stage').style.setProperty('--ff',f);if(n!='Bawaan'&&document.fonts)['400','700','800'].forEach(function(w){document.fonts.load(w+' 40px '+f)})}
+function applyScale(){TS=$('i-ts').value/100;BS=$('i-bs').value/100;PS=$('i-ps').value/100;LS=$('i-ls').value/100;var st=$('stage').style;st.setProperty('--ts',TS);st.setProperty('--bs',BS);st.setProperty('--ps',PS);st.setProperty('--ls',LS);PX=+$('i-px').value;PY=+$('i-py').value;LX=+$('i-lx').value;LY=+$('i-ly').value;st.setProperty('--px',PX);st.setProperty('--py',PY);st.setProperty('--lx',LX);st.setProperty('--ly',LY)}
+$('i-font').addEventListener('input',applyFont);$('i-ts').addEventListener('input',applyScale);$('i-bs').addEventListener('input',applyScale);$('i-ps').addEventListener('input',applyScale);$('i-ls').addEventListener('input',applyScale);['i-px','i-py','i-lx','i-ly'].forEach(function(k){$(k).addEventListener('input',applyScale)});
+applyFont();applyScale();
+function cl(x){return Math.max(0,Math.min(1,x))}
+function al(t,s,e){return Math.min(cl((t-s)/.5),cl((e-t)/.5))}
+function rr(x,y,w,h,r){cx.beginPath();cx.moveTo(x+r,y);cx.arcTo(x+w,y,x+w,y+h,r);cx.arcTo(x+w,y+h,x,y+h,r);cx.arcTo(x,y+h,x,y,r);cx.arcTo(x,y,x+w,y,r);cx.closePath()}
+function wrap(txt,font,maxW){cx.font=font;var w=txt.split(' '),l=[],c='';w.forEach(function(x){var n=c?c+' '+x:x;if(cx.measureText(n).width>maxW&&c){l.push(c);c=x}else c=n});if(c)l.push(c);return l}
+function sp(px){if('letterSpacing' in cx)cx.letterSpacing=px+'px'}
+function val(i){return $(i).value}
+function draw(t){
+ var W=1920,H=1080,a=.5+.5*Math.sin(t*.4),g=cx.createLinearGradient(-500*a,0,W*1.3-500*a,H*1.3);
+ g.addColorStop(0,val('i-g1'));g.addColorStop(.45,val('i-g2'));g.addColorStop(1,val('i-g3'));
+ cx.fillStyle=g;cx.fillRect(0,0,W,H);bgBlur(t);cx.textAlign='center';cx.textBaseline='middle';
+ function sc(s,e,fn){var A=al(t,s,e);if(A<=0)return;cx.save();cx.globalAlpha=A;cx.translate(0,s==12.3?0:(1-A)*55);fn();cx.restore()}
+ sc(0,3,function(){cx.font='700 40px '+F;sp(12);cx.fillStyle='#ffd9a0';cx.fillText(val('i-badge').toUpperCase(),W/2,H/2-130);sp(0);cx.fillStyle='#fff';var L=wrap(val('i-tag'),'800 134px '+F,1700);cx.font='800 134px '+F;L.forEach(function(s,i){cx.fillText(s,W/2,H/2+20+i*150*TS-(L.length-1)*75*TS)})});
+ sc(3,8,function(){var S=845*PS,x=Math.max(110,(W-845*PS-850)/2),y=(H-S)/2,ph=2*Math.PI*t/3.2,dy=-46*(.5-.5*Math.cos(ph)),rot=.035*Math.sin(ph);
+  cx.save();cx.translate(x+S/2+PX*19.2,y+S/2+dy+PY*19.2);cx.rotate(rot);
+  var r=cx.createRadialGradient(0,0,0,0,0,S*.5);r.addColorStop(0,'rgba(255,255,255,.28)');r.addColorStop(1,'rgba(255,255,255,0)');cx.fillStyle=r;cx.fillRect(-S/2,-S/2,S,S);
+  var im=document.querySelector('#o-img img');
+  if(im&&im.naturalWidth){var k=Math.min(S/im.naturalWidth,S/im.naturalHeight),w=im.naturalWidth*k,h=im.naturalHeight*k;cx.shadowColor='rgba(0,0,0,.35)';cx.shadowBlur=60;cx.shadowOffsetY=40;cx.drawImage(im,-w/2,-h/2,w,h)}else{cx.font='350px '+F;cx.fillText('\ud83d\udecd\ufe0f',0,0)}
+  cx.restore();
+  cx.textAlign='left';var tx=x+S+70,mw=Math.max(360,W-tx-90),N=wrap(val('i-name'),'800 120px '+F,mw),D=wrap(val('i-desc'),'400 50px '+F,mw),th=N.length*135*TS+D.length*66*BS+20,ty=H/2-th/2;
+  cx.fillStyle='#fff';cx.font='800 120px '+F;N.forEach(function(s,i){cx.fillText(s,tx,ty+67*TS+i*135*TS)});
+  cx.fillStyle='rgba(255,255,255,.82)';cx.font='400 50px '+F;D.forEach(function(s,i){cx.fillText(s,tx,ty+N.length*135*TS+20+33*BS+i*66*BS)})});
+ sc(8,12,function(){cx.font='700 40px '+F;sp(12);cx.fillStyle='#ffd9a0';cx.fillText('KENAPA PILIH INI',W/2,H/2-150);sp(0);
+  cx.font='700 52px '+F;var P=[val('i-p1'),val('i-p2'),val('i-p3')],ws=P.map(function(s){return cx.measureText(s).width+110}),tot=ws[0]+ws[1]+ws[2]+120,x=(W-tot)/2;
+  P.forEach(function(s,i){var q=cl((t-8-i*.4)/.5);cx.save();cx.globalAlpha*=q;cx.translate(0,(1-q)*40);cx.fillStyle='rgba(255,255,255,.16)';rr(x,H/2-20,ws[i],130,36);cx.fill();cx.fillStyle='#fff';cx.textAlign='left';cx.fillText(s,x+55,H/2+45);cx.restore();x+=ws[i]+60})});
+ sc(12.3,14.8,function(){var ey=Math.max(0,(LS-1)*200);var lg=document.querySelector('#o-logo img');if(lg&&lg.naturalWidth){var kk=Math.min(230*LS/lg.naturalHeight,700*LS/lg.naturalWidth),lw=lg.naturalWidth*kk,lh=lg.naturalHeight*kk;cx.save();cx.shadowColor='rgba(0,0,0,.3)';cx.shadowBlur=30;cx.shadowOffsetY=12;cx.drawImage(lg,W/2-lw/2+LX*19.2,90+(230*LS-lh)/2+LY*19.2,lw,lh);cx.restore()}cx.save();var zz=.9+.1*ez(cl((t-12.3)/1.3));cx.translate(W/2,H/2);cx.scale(zz,zz);cx.translate(-W/2,-H/2);cx.font='400 52px '+F;cx.fillStyle='rgba(255,255,255,.85)';cx.fillText(val('i-end'),W/2,H/2+40+ey);var L=wrap(val('i-tl'),'800 134px '+F,1700),o=(L.length-1)*75*TS;cx.font='800 134px '+F;cx.fillStyle='#fff';L.forEach(function(s,i){cx.fillText(s,W/2,H/2-100+ey-o+i*150*TS)});
+  cx.font='800 58px '+F;var c=val('i-cta'),w=cx.measureText(c).width+150;cx.fillStyle='#fff';rr(W/2-w/2,H/2+140+ey+o,w,130,65);cx.fill();cx.fillStyle='#b42a22';cx.fillText(c,W/2,H/2+207+ey+o);cx.restore()});
+ cx.fillStyle='#fff';cx.fillRect(0,H-15,Math.min(t,15)/15*W,15);var fo=ez((t-14)/1);if(fo>0){cx.fillStyle='rgba(0,0,0,'+fo+')';cx.fillRect(0,0,W,H)}
+}
+var rb=$('dl');
+function recordRT(){
+ if(!window.MediaRecorder||!cv.captureStream){rb.textContent='Browser tidak mendukung';return}
+ rb.disabled=true;var mt=['video/mp4;codecs=avc1.42E01E','video/mp4','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'].filter(function(m){return MediaRecorder.isTypeSupported(m)})[0],ex=/mp4/.test(mt)?'mp4':'webm';
+ var mr=new MediaRecorder(cv.captureStream(60),{mimeType:mt,videoBitsPerSecond:16000000}),ch=[];
+ mr.ondataavailable=function(e){if(e.data.size)ch.push(e.data)};
+ mr.onstop=async function(){var b=new Blob(ch,{type:ex=='mp4'?'video/mp4':'video/webm'});rb.disabled=false;rb.textContent='⬇ Unduh video';
+  var d=null;try{d=await claude.use('downloads')}catch(e){}
+  if(d){try{await d.save({filename:'video-produk.'+ex,data:b})}catch(e){}}
+  else{var u=URL.createObjectURL(b),an=document.createElement('a');an.href=u;an.download='video-produk.'+ex;document.body.appendChild(an);an.click();an.remove()}};
+ mr.start(1000);var s0=performance.now();
+ (function f(){var t=(performance.now()-s0)/1000;draw(Math.min(t,15));rb.textContent='Merekam… '+Math.min(t,15).toFixed(0)+'/15 dtk';if(t<15.8)requestAnimationFrame(f);else mr.stop()})();
+}
+async function saveOut(b,ex){var d=null;try{d=await claude.use('downloads')}catch(e){}
+ if(d){try{await d.save({filename:'video-produk.'+ex,data:b})}catch(e){}}
+ else{var u=URL.createObjectURL(b),an=document.createElement('a');an.href=u;an.download='video-produk.'+ex;document.body.appendChild(an);an.click();an.remove()}}
+async function exportMp4(){var W=1920,H=1080,FPS=60,N=15*FPS+1,cfg={codec:'avc1.64002A',width:W,height:H,bitrate:16e6,framerate:FPS};
+ var sup=await VideoEncoder.isConfigSupported(cfg);if(!sup.supported){cfg.codec='avc1.640028';sup=await VideoEncoder.isConfigSupported(cfg);if(!sup.supported)throw new Error('encoder tidak didukung')}
+ var muxer=new Mp4Muxer.Muxer({target:new Mp4Muxer.ArrayBufferTarget(),video:{codec:'avc',width:W,height:H},fastStart:'in-memory'}),err=null,enc=new VideoEncoder({output:function(c,m){muxer.addVideoChunk(c,m)},error:function(e){err=e}});
+ enc.configure(cfg);
+ for(var i=0;i<N;i++){if(err)throw err;draw(Math.min(i/FPS,15));var fr=new VideoFrame(cv,{timestamp:Math.round(i*1e6/FPS),duration:Math.round(1e6/FPS)});enc.encode(fr,{keyFrame:i%120==0});fr.close();
+  while(enc.encodeQueueSize>8)await new Promise(function(r){setTimeout(r,5)});
+  if(i%6==0){rb.textContent='Membuat video… '+Math.round(i/N*100)+'%';await new Promise(function(r){setTimeout(r)})}}
+ await enc.flush();muxer.finalize();return new Blob([muxer.target.buffer],{type:'video/mp4'})}
+rb.addEventListener('click',async function(){rb.disabled=true;if(!paused)setPaused(true);
+ if(window.VideoEncoder&&window.VideoFrame&&window.Mp4Muxer){try{var b=await exportMp4();rb.disabled=false;rb.textContent='⬇ Unduh video';await saveOut(b,'mp4');return}catch(e){console.warn(e)}}
+ rb.disabled=false;recordRT()});
+function frame(){cancelAnimationFrame(raf);t0=null;tick(performance.now());cancelAnimationFrame(raf)}
+function setPaused(v){paused=v;$('pp').textContent=v?'▶ Play':'⏸ Jeda';if(v){cancelAnimationFrame(raf);off=Math.min(cur,15)}else{if(cur>=15)off=0;setBg();t0=null;raf=requestAnimationFrame(tick)}}
+$('pp').addEventListener('click',function(){setPaused(!paused)});
+$('sk').addEventListener('input',function(){if(!paused)setPaused(true);off=+this.value;cur=off;frame()});
+document.addEventListener('keydown',function(e){if(e.code=='Space'&&!/INPUT|SELECT|TEXTAREA|BUTTON/.test(e.target.tagName)){e.preventDefault();setPaused(!paused)}});
+var SK='videoProdukSettings',allIds=['i-font','i-ts','i-bs','i-ps','i-ls','i-px','i-py','i-lx','i-ly','i-tl','i-end','i-badge','i-tag','i-name','i-desc','i-p1','i-p2','i-p3','i-cta','i-g1','i-g2','i-g3'],svT;
+function saveSt(){var o={v:{}};allIds.forEach(function(k){o.v[k]=$(k).value});try{localStorage.setItem(SK,JSON.stringify(o))}catch(e){}
+ [['#o-img img','-foto'],['#o-logo img','-logo']].forEach(function(p){var im=document.querySelector(p[0]);try{if(im&&/^data:/.test(im.src))localStorage.setItem(SK+p[1],im.src);else localStorage.removeItem(SK+p[1])}catch(e){}})}
+function loadSt(){try{var o=JSON.parse(localStorage.getItem(SK)||'null');if(o&&o.v)allIds.forEach(function(k){if(o.v[k]!=null){$(k).value=o.v[k];$(k).dispatchEvent(new Event('input'))}})}catch(e){}
+ try{var f=localStorage.getItem(SK+'-foto');if(f){var d=$('o-img');d.textContent='';var im=new Image();im.alt='';im.src=f;d.appendChild(im)}}catch(e){}
+ try{var l=localStorage.getItem(SK+'-logo');if(l)setLogo(l)}catch(e){}
+ applyFont();applyScale()}
+loadSt();
+['input','change'].forEach(function(n){document.addEventListener(n,function(){clearTimeout(svT);svT=setTimeout(saveSt,1200)})});
+$('rs').addEventListener('click',function(){try{localStorage.removeItem(SK);localStorage.removeItem(SK+'-foto');localStorage.removeItem(SK+'-logo')}catch(e){}location.reload()});
+function tick(ts){if(!t0)t0=ts;var t=(ts-t0)/1000+off;cur=t;
+  scs.forEach(function(s){s.classList.toggle('on',t>=+s.dataset.s&&t<+s.dataset.e)});
+  bgDom(t);var p=Math.min(t,15);bar.style.width=(p/15*100)+'%';tm.textContent=p.toFixed(1)+' / 15 dtk';$('sk').value=p;
+  if(t<15)raf=requestAnimationFrame(tick);else{scs.forEach(function(s){s.classList.remove('on')});scs[3].classList.add('on');paused=true;$('pp').textContent='▶ Play'}}
+function play(){setBg();off=0;paused=false;$('pp').textContent='⏸ Jeda';cancelAnimationFrame(raf);t0=null;scs.forEach(function(s){s.classList.remove('on')});raf=requestAnimationFrame(tick)}
+$('play').addEventListener('click',play);play();
+</script>
+</body>
+</html>
