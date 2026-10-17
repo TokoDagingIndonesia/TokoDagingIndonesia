@@ -17,8 +17,9 @@ body{margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-
 .sc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;transform:translateY(3cqw);transition:opacity .5s,transform .5s;padding:4cqw}
 .sc.on{opacity:1;transform:none}
 .sc[data-s="12.3"]{transform:none}
-.sc[data-s="12.3"]>:not(.logo){transform:scale(.9)}
-.sc.on[data-s="12.3"]>:not(.logo){transform:scale(1);transition:transform 1.3s cubic-bezier(.45,0,.2,1)}
+#o-logo{display:none!important}
+.logo2{position:absolute;z-index:3;left:calc(3.65cqw + var(--lx,0)*1cqw);top:calc(3.1cqw + var(--ly,0)*1cqw);height:calc(5.7cqw*var(--ls,1));display:flex;pointer-events:none}.logo2:empty{display:none}
+.logo2 img{height:100%;width:auto;max-width:calc(21.9cqw*var(--ls,1));object-fit:contain;filter:drop-shadow(0 .4cqw .8cqw rgba(0,0,0,.3))}
 .row{flex-direction:row;gap:3cqw;text-align:left}
 .bgb{position:absolute;inset:-6cqw;z-index:-1;opacity:0;filter:blur(4cqw);will-change:filter,transform,opacity;background:radial-gradient(circle at 20% 30%,rgba(255,255,255,.25),transparent 40%),radial-gradient(circle at 80% 70%,rgba(255,255,255,.18),transparent 45%);background-size:cover;background-position:center}
 .logo{position:relative;left:calc(var(--lx,0)*1cqw);top:calc(var(--ly,0)*1cqw);height:calc(12cqw*var(--ls,1));margin-bottom:1.5cqw;display:flex}.logo:empty{display:none}
@@ -52,7 +53,7 @@ p.note{font-size:13px;color:var(--mut)}
 </head>
 <body>
 <div class="wrap">
-  <div class="stage" id="stage"><div class="bgb" id="o-bgb"></div>
+  <div class="stage" id="stage"><div class="bgb" id="o-bgb"></div><div class="logo2" id="o-logo2"></div>
     <div class="sc" data-s="0" data-e="3"><div class="tag" id="o-badge">Segera Hadir</div><h1 class="big" id="o-tagline">Rasa baru, hadir untukmu</h1></div>
     <div class="sc row" data-s="3" data-e="8"><div class="prod" id="o-img">🛍️</div><div class="txt"><h2 class="big" id="o-name">Nama Produk</h2><p class="sub" id="o-desc">Deskripsi singkat produk</p></div></div>
     <div class="sc" data-s="8" data-e="12"><div class="tag">Kenapa Pilih Ini</div><div class="pts"><div class="pt" id="o-p1">Berkualitas</div><div class="pt" id="o-p2">Harga bersahabat</div><div class="pt" id="o-p3">Praktis</div></div></div>
@@ -130,7 +131,7 @@ var ids={font:'i-font',judul:'i-ts',teks:'i-bs',ukuranProduk:'i-ps',ukuranLogo:'
 Object.keys(ids).forEach(function(k){var el=$(ids[k]);el.value=CONFIG[k];el.dispatchEvent(new Event('input'))});
 if(CONFIG.foto){var im0=document.createElement('img');im0.alt='';im0.src=CONFIG.foto;$('o-img').textContent='';$('o-img').appendChild(im0)}
 $('cp').addEventListener('click',function(){var o={};Object.keys(ids).forEach(function(k){o[k]=$(ids[k]).value});o.logo=CONFIG.logo;o.foto=CONFIG.foto;var txt='var CONFIG='+JSON.stringify(o,null,2)+';';var ta=$('cfg');ta.value=txt;ta.style.display='block';ta.select();try{navigator.clipboard.writeText(txt)}catch(e){}});
-function setLogo(src){var o=$('o-logo');o.textContent='';if(src){var im=new Image();im.alt='';im.src=src;o.appendChild(im)}}
+function setLogo(src){['o-logo','o-logo2'].forEach(function(id){var o=$(id);o.textContent='';if(src){var im=new Image();im.alt='';im.src=src;o.appendChild(im)}})}
 setLogo(CONFIG.logo);
 $('i-logo').addEventListener('change',function(){var f=this.files&&this.files[0];if(!f){setLogo('');return}var r=new FileReader();r.onload=function(){setLogo(r.result)};r.readAsDataURL(f)});
 function setBg(){var im=document.querySelector('#o-img img');$('o-bgb').style.backgroundImage=im?'linear-gradient(rgba(0,0,0,.3),rgba(0,0,0,.3)),url("'+im.src+'")':''}
@@ -140,7 +141,7 @@ function mkBlur(im,r){var w=480,h=270,c=document.createElement('canvas');c.width
  for(var z=bw*2;z<=480;z*=2){var n=document.createElement('canvas');n.width=z;n.height=Math.round(z*9/16);var m=n.getContext('2d');m.imageSmoothingQuality='high';m.drawImage(t,0,0,n.width,n.height);t=n}
  return t}
 function ez(x){x=cl(x);return x*x*(3-2*x)}
-function bgDom(t){$('o-fo').style.opacity=ez((t-14)/1);var B=$('o-bgb'),a=ez((t-11.6)/1.6),b=ez((t-12.2)/2.4);B.style.opacity=0;B.style.filter='blur('+(0.6+3.4*b).toFixed(2)+'cqw)';B.style.transform='scale('+(1+.08*cl((t-11.6)/3.4)).toFixed(4)+')'}
+function bgDom(t){$('o-logo2').style.opacity=Math.min(cl(t/.8),cl((14.8-t)/.5)).toFixed(3);$('o-fo').style.opacity=ez((t-14)/1);var B=$('o-bgb'),a=ez((t-11.6)/1.6),b=ez((t-12.2)/2.4);B.style.opacity=0;B.style.filter='blur('+(0.6+3.4*b).toFixed(2)+'cqw)';B.style.transform='scale('+(1+.08*cl((t-11.6)/3.4)).toFixed(4)+')'}
 function bgBlur(t){return;var a=ez((t-11.6)/1.6),b=ez((t-12.2)/2.4);if(a<=0)return;var im=document.querySelector('#o-img img'),W=1920,H=1080,s=1+.08*cl((t-11.6)/3.4);
  cx.save();cx.translate(W/2,H/2);cx.scale(s,s);cx.translate(-W/2,-H/2);cx.imageSmoothingEnabled=true;cx.imageSmoothingQuality='high';
  if(im&&im.naturalWidth){if(bgBlur.s!==im.src){bgBlur.s=im.src;bgBlur.m=mkBlur(im,5);bgBlur.c=mkBlur(im,26)}
@@ -181,8 +182,9 @@ function draw(t){
  sc(8,12,function(){cx.font='700 40px '+F;sp(12);cx.fillStyle='#ffd9a0';cx.fillText('KENAPA PILIH INI',W/2,H/2-150);sp(0);
   cx.font='700 52px '+F;var P=[val('i-p1'),val('i-p2'),val('i-p3')],ws=P.map(function(s){return cx.measureText(s).width+110}),tot=ws[0]+ws[1]+ws[2]+120,x=(W-tot)/2;
   P.forEach(function(s,i){var q=cl((t-8-i*.4)/.5);cx.save();cx.globalAlpha*=q;cx.translate(0,(1-q)*40);cx.fillStyle='rgba(255,255,255,.16)';rr(x,H/2-20,ws[i],130,36);cx.fill();cx.fillStyle='#fff';cx.textAlign='left';cx.fillText(s,x+55,H/2+45);cx.restore();x+=ws[i]+60})});
- sc(12.3,14.8,function(){var ey=Math.max(0,(LS-1)*200);var lg=document.querySelector('#o-logo img');if(lg&&lg.naturalWidth){var kk=Math.min(230*LS/lg.naturalHeight,700*LS/lg.naturalWidth),lw=lg.naturalWidth*kk,lh=lg.naturalHeight*kk;cx.save();cx.shadowColor='rgba(0,0,0,.3)';cx.shadowBlur=30;cx.shadowOffsetY=12;cx.drawImage(lg,W/2-lw/2+LX*19.2,90+(230*LS-lh)/2+LY*19.2,lw,lh);cx.restore()}cx.save();var zz=.9+.1*ez(cl((t-12.3)/1.3));cx.translate(W/2,H/2);cx.scale(zz,zz);cx.translate(-W/2,-H/2);cx.font='400 52px '+F;cx.fillStyle='rgba(255,255,255,.85)';cx.fillText(val('i-end'),W/2,H/2+40+ey);var L=wrap(val('i-tl'),'800 134px '+F,1700),o=(L.length-1)*75*TS;cx.font='800 134px '+F;cx.fillStyle='#fff';L.forEach(function(s,i){cx.fillText(s,W/2,H/2-100+ey-o+i*150*TS)});
-  cx.font='800 58px '+F;var c=val('i-cta'),w=cx.measureText(c).width+150;cx.fillStyle='#fff';rr(W/2-w/2,H/2+140+ey+o,w,130,65);cx.fill();cx.fillStyle='#b42a22';cx.fillText(c,W/2,H/2+207+ey+o);cx.restore()});
+ sc(12.3,14.8,function(){var ey=0;var lg=document.querySelector('#o-logo img');if(false&&lg&&lg.naturalWidth){var kk=Math.min(230*LS/lg.naturalHeight,700*LS/lg.naturalWidth),lw=lg.naturalWidth*kk,lh=lg.naturalHeight*kk;cx.save();cx.shadowColor='rgba(0,0,0,.3)';cx.shadowBlur=30;cx.shadowOffsetY=12;cx.drawImage(lg,W/2-lw/2+LX*19.2,90+(230*LS-lh)/2+LY*19.2,lw,lh);cx.restore()}cx.font='400 52px '+F;cx.fillStyle='rgba(255,255,255,.85)';cx.fillText(val('i-end'),W/2,H/2+40+ey);var L=wrap(val('i-tl'),'800 134px '+F,1700),o=(L.length-1)*75*TS;cx.font='800 134px '+F;cx.fillStyle='#fff';L.forEach(function(s,i){cx.fillText(s,W/2,H/2-100+ey-o+i*150*TS)});
+  cx.font='800 58px '+F;var c=val('i-cta'),w=cx.measureText(c).width+150;cx.fillStyle='#fff';rr(W/2-w/2,H/2+140+ey+o,w,130,65);cx.fill();cx.fillStyle='#b42a22';cx.fillText(c,W/2,H/2+207+ey+o)});
+ var lg2=document.querySelector('#o-logo img');if(lg2&&lg2.naturalWidth){var hh=110*LS,ww=lg2.naturalWidth*hh/lg2.naturalHeight,mw2=420*LS;if(ww>mw2){ww=mw2;hh=lg2.naturalHeight*ww/lg2.naturalWidth}cx.save();cx.globalAlpha=Math.min(cl(t/.8),cl((14.8-t)/.5));cx.shadowColor='rgba(0,0,0,.3)';cx.shadowBlur=20;cx.shadowOffsetY=8;cx.drawImage(lg2,70+LX*19.2,60+LY*19.2,ww,hh);cx.restore()}
  cx.fillStyle='#fff';cx.fillRect(0,H-15,Math.min(t,15)/15*W,15);var fo=ez((t-14)/1);if(fo>0){cx.fillStyle='rgba(0,0,0,'+fo+')';cx.fillRect(0,0,W,H)}
 }
 var rb=$('dl');
