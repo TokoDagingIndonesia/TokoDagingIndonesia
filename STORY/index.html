@@ -38,6 +38,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 <label style="margin-top:14px">Bayangan gambar</label><div class="g"><span>Aktif</span><input type="checkbox" data-p="sh" aria-label="Bayangan aktif"><span>Blur</span><input type="range" min="0" max="80" data-p="sb"><span>Jarak</span><input type="range" min="-40" max="80" data-p="so"><span>Opasitas</span><input type="range" min="0" max="100" data-p="sa"><span>Warna</span><input type="color" data-p="sc"></div></div>
 <label style="font-size:13px;font-weight:700;margin-top:14px;display:block">Kualitas rekaman</label><div class="g"><span>Resolusi</span><select id="rs2"><option value="1080" selected>1080p (1080×1920)</option><option value="720">720p (720×1280)</option></select><span>FPS</span><select id="fp"><option value="60" selected>60 fps</option><option value="30">30 fps</option></select></div>
 <button id="rec">Rekam video (15 detik)</button><button class="o" id="re">Putar ulang</button><button class="o" id="shot">Unduh gambar PNG</button><button class="o" id="rs">Reset</button>
+<div class="blk"><label>Cadangkan pengaturan</label><button class="o" id="cp" style="margin-top:0">Salin pengaturan</button><button class="o" id="ps" style="margin-top:0">Tempel pengaturan</button><div id="pw" hidden><textarea id="pt" rows="4" placeholder="Tempel teks pengaturan di sini" style="width:100%;box-sizing:border-box;margin-top:8px;border:2px solid #d9c7c0;border-radius:8px;padding:8px;font:12px monospace;background:transparent;color:inherit"></textarea><button id="pa" style="margin-top:6px">Terapkan</button></div></div>
 <div id="st" role="status"></div><div id="res"></div>
 </div>
 <script>
@@ -75,11 +76,11 @@ function em(t){t=Math.min(1,Math.max(0,t));return t<.5?16*t*t*t*t*t:1-Math.pow(-
 function spr(t){t=Math.max(0,t);return t>=1.6?1:1-Math.exp(-7*t)*Math.cos(9*t)}
 var SC=1.5,xm=x,oc=document.createElement('canvas');oc.width=c.width;oc.height=c.height;var xo=oc.getContext('2d');
 function setRes(w){SC=w/720;c.width=w;c.height=Math.round(w*16/9);oc.width=c.width;oc.height=c.height}
-function render(t){if(B.mb&&(t<1.9||(t>3.2&&t<5.2))){for(var k=0;k<4;k++){x=xo;draw(Math.max(0,t-.02*k/3));xm.setTransform(1,0,0,1,0,0);xm.globalAlpha=1/(k+1);xm.drawImage(oc,0,0)}xm.globalAlpha=1;x=xm}else{x=xm;draw(t)}}
+function render(t){if(B.mb&&(t<1.9||(t>2.4&&t<4.4))){for(var k=0;k<4;k++){x=xo;draw(Math.max(0,t-.02*k/3));xm.setTransform(1,0,0,1,0,0);xm.globalAlpha=1/(k+1);xm.drawImage(oc,0,0)}xm.globalAlpha=1;x=xm}else{x=xm;draw(t)}}
 function eio(t){t=Math.min(1,Math.max(0,t));return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
 function eob(t,s){t=Math.min(1,Math.max(0,t));return 1+(s+1)*Math.pow(t-1,3)+s*Math.pow(t-1,2)}
 function bl(px){if(px>.3&&('filter' in x))x.filter='blur('+(px*SC).toFixed(1)+'px)'}
-var ST=[0,.35,.7,.9,3.8,4.6],bgI=new Image(),hasBg=false;
+var ST=[0,.35,.7,.9,3,3.8],bgI=new Image(),hasBg=false;
 bgI.onload=function(){hasBg=true};
 function paintBg(t){var ga=x.globalAlpha,g=x.createLinearGradient(0,0,0,1280);g.addColorStop(0,B.top);g.addColorStop(1,B.bot);x.fillStyle=g;x.fillRect(0,0,720,1280);
  if(hasBg&&bgI.width){var z=1+.04*(1-Math.cos(Math.PI*2*Math.min(t,15)/15))/2,s=Math.max(720/bgI.width,1280/bgI.height)*z,w=bgI.width*s,h=bgI.height*s;x.globalAlpha=ga*B.bo/100;x.drawImage(bgI,360-w/2,640-h/2,w,h);x.globalAlpha=ga}}
@@ -88,16 +89,16 @@ function draw(t){
  paintBg(t);
  for(var j=0;j<2;j++){var gx=360+Math.sin(t*.35+j*3)*300,gy=300+j*500+Math.cos(t*.3+j)*120,rg=x.createRadialGradient(gx,gy,0,gx,gy,420);rg.addColorStop(0,'rgba(255,255,255,.14)');rg.addColorStop(1,'rgba(255,255,255,0)');x.fillStyle=rg;x.fillRect(0,0,720,1280)}
  var tb=0;E.forEach(function(e){if(!e.on||!e.t||e.k=='cta')return;var bt=e.k=='badge'?e.y+26:e.y+.28*e.s;if(bt>tb)tb=bt});
- var PT=B.pn?Math.min(1000,Math.max(560,tb+40)):B.py,L=em((t-3.3)/1.1),dy=(1-L)*170;
+ var PT=B.pn?Math.min(1000,Math.max(560,tb+40)):B.py,L=em((t-2.5)/1.1),dy=(1-L)*170;
  x.fillStyle=B.panel;x.beginPath();x.roundRect(0,PT+(1-L)*(1300-PT),720,1600-PT,[100,0,0,0]);x.fill();
- var a=eq((t-3.7)/1.5),ih=B.hs,iw=img.width?img.width*ih/img.height:ih*.75;if(iw>680){iw=680;ih=img.height*iw/img.width}
+ var a=eq((t-2.9)/1.5),ih=B.hs,iw=img.width?img.width*ih/img.height:ih*.75;if(iw>680){iw=680;ih=img.height*iw/img.width}
  var hmax=1280-B.hy-(tb+14);if(B.pn&&ih>hmax&&hmax>200){iw*=hmax/ih;ih=hmax}
- var hv=ez((t-3.7)/.6);if(hv>0){x.save();x.globalAlpha=hv;x.translate(360+B.hx,1280);var br=Math.sin(t*2.2),rp=Math.min(1,Math.max(0,t-5.2)),zs=.96+.04*a;
+ var hv=ez((t-2.9)/.6);if(hv>0){x.save();x.globalAlpha=hv;x.translate(360+B.hx,1280);var br=Math.sin(t*2.2),rp=Math.min(1,Math.max(0,t-4.4)),zs=.96+.04*a;
  x.rotate(Math.sin(t*1.1)*.008*rp+B.hr*Math.PI/180);var us=(1+.006*br*rp)*zs;x.scale((B.fl?-1:1)*us,us);if(B.sh){x.shadowColor=rgba(B.sc,B.sa/100);x.shadowBlur=B.sb*SC;x.shadowOffsetY=B.so*SC}
  x.drawImage(img,-iw/2,-ih-B.hy+(1-a)*(ih+B.hy+140)+Math.sin(t*1.6)*8*rp,iw,ih);x.restore()}
  var ph=(t%5)-3;if(t>6&&ph>0&&ph<.7)star(520+B.hx,770-B.hy,46*Math.sin(ph/.7*Math.PI),ph*2);
  var act=[];E.forEach(function(e,i){if(e.on&&e.t)act.push(i)});
- function pulseOf(i){var pos=act.indexOf(i);if(!B.pu||t<5.4||pos<0)return 1;var D=B.ps*2.2,sp=D*.42,cy=(act.length-1)*sp+D+.8,u=(((t-5.4)%cy)-pos*sp)/D;if(u<=0||u>=1)return 1;return 1+B.pa/100*(.5-.5*Math.cos(2*Math.PI*u))}
+ function pulseOf(i){var pos=act.indexOf(i);if(!B.pu||t<4.6||pos<0)return 1;var D=B.ps*2.2,sp=D*.42,cy=(act.length-1)*sp+D+.8,u=(((t-4.6)%cy)-pos*sp)/D;if(u<=0||u>=1)return 1;return 1+B.pa/100*(.5-.5*Math.cos(2*Math.PI*u))}
  x.textAlign='center';x.textBaseline='alphabetic';
  E.forEach(function(e,i){if(!e.on||!e.t)return;var d=ST[i],u=(t-d)/.8,al=eq(u),pp=pulseOf(i);if(u<=0)return;
   x.save();x.fillStyle=e.c;fit(e,e.k=='big'?640:660);
@@ -105,7 +106,7 @@ function draw(t){
   else if(e.k=='tag'){x.globalAlpha=Math.min(1,al*3);x.translate(360,e.y+dy);x.translate(0,-.3*e.s);x.scale(pp,pp*Math.max(.02,al));x.translate(0,.3*e.s);bl((1-al)*8);x.fillText(e.t,0,0)}
   else if(e.k=='small'){x.globalAlpha=ez(u*2);var s1=(.5+.5*spr(u))*pp;x.translate(360,e.y+dy);x.translate(0,-.3*e.s);x.scale(s1,s1);x.translate(0,.3*e.s);bl((1-al)*12);x.fillText(e.t,0,0)}
   else if(e.k=='big'){var uu=(t-d)/.75,s2=.4+.6*spr(uu);s2*=pp;x.globalAlpha=ez(uu*2);x.translate(360,e.y+dy);x.translate(0,-.3*e.s);x.scale(s2,s2);x.translate(0,.3*e.s);bl((1-eq(uu))*14);
-   var w3=x.measureText(e.t).width,gp=-1;if(t>=1.8&&t<=3.1)gp=(t-1.8)/1.3;else if(t>6)gp=((t-6)%3.4)/1.1;
+   var w3=x.measureText(e.t).width,gp=-1;if(t>=1.8&&t<=2.5)gp=(t-1.8)/.7;else if(t>5.2)gp=((t-5.2)%3.4)/.6;
    x.fillStyle=e.c;x.shadowColor='rgba(60,0,0,.45)';x.shadowOffsetY=10*SC;x.fillText(e.t,0,0);
    if(gp>=0&&gp<=1){var sp=.5-.5*Math.cos(Math.PI*gp),gl=Math.sin(Math.PI*gp),sx=-w3/2-160+sp*(w3+320),gr=x.createLinearGradient(sx-110,0,sx+110,0);gr.addColorStop(0,e.c);gr.addColorStop(.5,'#ffffff');gr.addColorStop(1,e.c);
     x.shadowColor='rgba(255,240,170,'+(.45*gl).toFixed(2)+')';x.shadowBlur=7*SC*gl;x.shadowOffsetY=0;x.fillStyle=gr;x.fillText(e.t,0,0)}}
@@ -125,10 +126,23 @@ $i('re').onclick=function(){if(recording)return;pt=0;playing=true;setPP()};
 sl.oninput=function(){if(recording)return;dragging=true;playing=false;setPP();pt=sl.value/10};
 sl.onchange=function(){dragging=false};
 $i('shot').onclick=function(){render(Math.min(pt,15));c.toBlob(function(b){dl(b,'promo-tdi.png');st.textContent='Gambar PNG diunduh.'})};
-$i('bgup').onchange=function(e){var f=e.target.files[0];if(f){hasBg=false;bgI.src=URL.createObjectURL(f)}};
-$i('bgx').onclick=function(){hasBg=false;$i('bgup').value=''};
-$i('up').onchange=function(e){var f=e.target.files[0];if(f)img.src=URL.createObjectURL(f)};
-$i('rs2').onchange=function(){if(!recording)setRes(+this.value)};
+$i('bgup').onchange=function(e){var f=e.target.files[0];if(f){hasBg=false;bgI.src=URL.createObjectURL(f);idbSet('bg',f)}};
+$i('bgx').onclick=function(){hasBg=false;$i('bgup').value='';idbSet('bg',null)};
+$i('up').onchange=function(e){var f=e.target.files[0];if(f){img.src=URL.createObjectURL(f);idbSet('img',f)}};
+function idb(cb){try{var r=indexedDB.open('tdi-promo',1);r.onupgradeneeded=function(){r.result.createObjectStore('f')};r.onsuccess=function(){cb(r.result)}}catch(e){}}
+function idbSet(k,v){idb(function(d){try{var s=d.transaction('f','readwrite').objectStore('f');if(v==null)s.delete(k);else s.put(v,k)}catch(e){}})}
+function idbGet(k,cb){idb(function(d){try{var q=d.transaction('f').objectStore('f').get(k);q.onsuccess=function(){cb(q.result)}}catch(e){}})}
+idbGet('img',function(f){if(f)img.src=URL.createObjectURL(f)});
+idbGet('bg',function(f){if(f){hasBg=false;bgI.src=URL.createObjectURL(f)}});
+function sq(){try{localStorage.setItem('tdi-promo-v2-q',JSON.stringify({r:$i('rs2').value,f:$i('fp').value}))}catch(e){}}
+$i('rs2').onchange=function(){if(!recording){setRes(+this.value);sq()}};
+$i('fp').onchange=sq;
+function cpTxt(s){if(navigator.clipboard&&navigator.clipboard.writeText)return navigator.clipboard.writeText(s);return Promise.reject()}
+$i('cp').onclick=function(){var s=JSON.stringify({tdi:1,S:S});cpTxt(s).then(function(){st.textContent='Pengaturan disalin. Tempel di halaman lain dengan tombol Tempel pengaturan.'}).catch(function(){$i('pw').hidden=false;$i('pt').value=s;$i('pt').select();st.textContent='Salin manual teks di kotak (Ctrl+C), lalu tempel di halaman lain.'})};
+$i('ps').onclick=function(){$i('pw').hidden=false;$i('pt').focus();st.textContent='Tempel teks pengaturan di kotak, lalu klik Terapkan.';try{navigator.clipboard.readText().then(function(t){if(t&&t.indexOf('"tdi"')>-1)$i('pt').value=t}).catch(function(){})}catch(e){}};
+$i('pa').onclick=function(){try{var o=JSON.parse($i('pt').value),n=o.S||o,d=def();if(!n||!Array.isArray(n.E)||n.E.length!=d.E.length||!n.B)throw 0;S=n;E=S.E;B=S.B;for(var kk in d.B)if(B[kk]==null)B[kk]=d.B[kk];save();build();$i('pw').hidden=true;$i('pt').value='';st.textContent='Pengaturan diterapkan.'}catch(e){st.textContent='Teks pengaturan tidak valid. Pastikan disalin utuh dari tombol Salin pengaturan.'}};
+try{localStorage.removeItem('tdi-promo-v2-q')}catch(e){}
+$i('rs2').value='1080';$i('fp').value='60';setRes(1080);
 rb.onclick=function(){
  if(recording)return;
  if(!window.MediaRecorder){st.textContent='Browser tidak mendukung perekaman. Gunakan Chrome, atau rekam layar.';return}
