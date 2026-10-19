@@ -167,7 +167,7 @@ rb.onclick=function(){
   var ext=m.indexOf('mp4')>-1?'mp4':'webm',b=new Blob(ch,{type:m.split(';')[0]}),u=URL.createObjectURL(b);
   res.innerHTML='<video controls playsinline src="'+u+'"></video>';
   var a=document.createElement('a');a.className='btn';a.href=u;a.download='promo-tdi.'+ext;a.textContent='Unduh video ('+ext+')';res.appendChild(a);
-  st.textContent='Rekaman selesai. Klik tombol untuk mengunduh.'};
+  dl(b,'promo-tdi.'+ext);st.textContent='Rekaman selesai. Video diunduh otomatis. Jika tidak muncul, klik tombol Unduh video di bawah.'};
  pt=0;playing=true;setPP();recording=true;rb.disabled=true;r.start();st.textContent='Merekam… tunggu 15 detik.'};
 (document.fonts?Promise.all([document.fonts.load('80px Anton'),document.fonts.load('700 28px "DM Sans"')]):Promise.resolve()).catch(function(){}).then(function(){last=performance.now();requestAnimationFrame(loop)});
 </script></body></html>
