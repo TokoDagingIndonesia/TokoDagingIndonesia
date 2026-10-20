@@ -163,13 +163,13 @@ rb.onclick=function(){
   if(useA){try{var ctx=acx();ctx.resume();var ds=ctx.createMediaStreamDestination(),g=ctx.createGain(),sr=ctx.createBufferSource(),v=(B.av==null?80:B.av)/100,off=Math.min(+B.as||0,Math.max(0,audBuf.duration-1));sr.buffer=audBuf;sr.loop=true;g.gain.value=0;sr.connect(g);g.connect(ds);aNode=sr;aGo=function(){var T=ctx.currentTime+.01;if(B.ai){g.gain.setValueAtTime(0,T);g.gain.linearRampToValueAtTime(v,T+1.5)}else g.gain.setValueAtTime(v,T);if(B.af){g.gain.setValueAtTime(v,T+13.4);g.gain.linearRampToValueAtTime(0,T+15)}sr.start(T,off);sr.stop(T+15.3)};cs=new MediaStream(cs.getVideoTracks().concat(ds.stream.getAudioTracks()))}catch(e){useA=false}}
   var r=new MediaRecorder(cs,{mimeType:m,videoBitsPerSecond:(c.width>=1080?20000000:10000000)});
  rec2=r;res.innerHTML='';
- r.onstart=function(){pt=0;fc=0;ft0=performance.now();if(aGo)acx().resume().then(function(){try{aGo()}catch(e){}})};
+ r.onstart=function(){pt=0;fc=0;ft0=performance.now();playing=true;setPP();last=performance.now();if(aGo)acx().resume().then(function(){try{aGo()}catch(e){}})};
  r.ondataavailable=function(e){ch.push(e.data)};
  r.onstop=function(){try{if(aNode)aNode.stop()}catch(e){}recording=false;rb.disabled=false;pt=0;playing=true;setPP();
   var ext=m.indexOf('mp4')>-1?'mp4':'webm',b=new Blob(ch,{type:m.split(';')[0]}),u=URL.createObjectURL(b);
   res.innerHTML='<video controls playsinline src="'+u+'"></video>';
   var a=document.createElement('a');a.className='btn';a.href=u;a.download='promo-tdi.'+ext;a.textContent='Unduh video ('+ext+')';res.appendChild(a);
   setTimeout(function(){try{a.click()}catch(e){}},400);var fp2=(fc/Math.max(1,(performance.now()-ft0)/1000)).toFixed(0);st.textContent='Rekaman selesai ('+c.width+'×'+c.height+', ±'+fp2+' fps). Mengunduh otomatis… Jika tidak muncul, klik tombol Unduh video di bawah.'};
- pt=0;playing=true;setPP();recording=true;rb.disabled=true;r.start();st.textContent='Merekam… tunggu 15 detik.'};
+ pt=0;playing=false;setPP();recording=true;rb.disabled=true;render(0);r.start();st.textContent='Merekam… tunggu 15 detik.'};
 (document.fonts?Promise.all([document.fonts.load('80px Anton'),document.fonts.load('700 28px "DM Sans"')]):Promise.resolve()).catch(function(){}).then(function(){last=performance.now();requestAnimationFrame(loop)});
 </script></body></html>
