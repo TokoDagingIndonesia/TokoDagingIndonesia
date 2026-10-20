@@ -36,7 +36,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 </div>
 <div class="blk"><label>Gambar utama (maskot / produk)</label><input type="file" id="up" accept="image/*"><div class="g"><span>Ukuran</span><input type="range" min="300" max="800" data-p="hs"><span>Naik</span><input type="range" min="-200" max="300" data-p="hy"><span>Geser</span><input type="range" min="-300" max="300" data-p="hx"><span>Putar</span><input type="range" min="-30" max="30" data-p="hr"><span>Cermin</span><input type="checkbox" data-p="fl" aria-label="Cermin gambar"></div>
 <label style="margin-top:14px">Bayangan gambar</label><div class="g"><span>Aktif</span><input type="checkbox" data-p="sh" aria-label="Bayangan aktif"><span>Blur</span><input type="range" min="0" max="80" data-p="sb"><span>Jarak</span><input type="range" min="-40" max="80" data-p="so"><span>Opasitas</span><input type="range" min="0" max="100" data-p="sa"><span>Warna</span><input type="color" data-p="sc"></div></div>
-<label style="font-size:13px;font-weight:700;margin-top:14px;display:block">Kualitas rekaman</label><div class="g"><span>Resolusi</span><select id="rs2"><option value="1080" selected>1080p (1080×1920)</option><option value="720">720p (720×1280)</option></select><span>FPS</span><select id="fp"><option value="60" selected>60 fps</option><option value="30">30 fps</option></select></div>
+<label style="font-size:13px;font-weight:700;margin-top:14px;display:block">Kualitas rekaman</label><div class="g"><span>Resolusi</span><select id="rs2"><option value="1080" selected>1080p (1080×1920)</option></select><span>FPS</span><select id="fp"><option value="60" selected>60 fps</option></select></div>
 <button id="rec">Rekam video (15 detik)</button><button class="o" id="re">Putar ulang</button><button class="o" id="shot">Unduh gambar PNG</button><button class="o" id="rs">Reset</button>
 <div class="blk"><label>Musik latar (backsound)</label><input type="file" id="aup" accept="audio/*"><div id="an" style="font-size:12px;margin-top:6px">Belum ada musik</div><div class="g"><span>Volume</span><input type="range" min="0" max="100" data-p="av" aria-label="Volume musik"><span>Mulai</span><input type="range" min="0" max="120" data-p="as" aria-label="Mulai musik dari detik ke berapa"><span>Fade in</span><input type="checkbox" data-p="ai" aria-label="Fade in di awal video"><span>Fade out</span><input type="checkbox" data-p="af" aria-label="Fade out di akhir video"></div><button class="o" id="apv" disabled style="margin-top:8px">Dengarkan musik</button><button class="o" id="axx" style="margin-top:8px">Hapus musik</button></div>
 <div class="blk"><label>Cadangkan pengaturan</label><button class="o" id="cp" style="margin-top:0">Salin pengaturan</button><button class="o" id="ps" style="margin-top:0">Tempel pengaturan</button><div id="pw" hidden><textarea id="pt" rows="4" placeholder="Tempel teks pengaturan di sini" style="width:100%;box-sizing:border-box;margin-top:8px;border:2px solid #d9c7c0;border-radius:8px;padding:8px;font:12px monospace;background:transparent;color:inherit"></textarea><button id="pa" style="margin-top:6px">Terapkan</button></div></div>
@@ -119,8 +119,8 @@ function draw(t){
 var pt=0,playing=true,last=performance.now(),dragging=false,$i=function(n){return document.getElementById(n)},sl=$i('sl'),pp=$i('pp'),tm=$i('tm'),st=$i('st'),res=$i('res'),rb=$i('rec'),rec2=null;
 function setPP(){pp.textContent=playing?'Jeda':'Putar'}
 function dl(b,n){var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;document.body.appendChild(a);a.click();a.remove()}
-function loop(now){var dt=Math.min(.1,(now-last)/1000);last=now;
- if(playing){pt+=dt;if(recording){if(pt>=15){pt=15;recording=false;rec2.stop()}}else if(pt>=15)pt-=15}
+var fc=0,ft0=0;function loop(now){var dt=Math.min(.1,(now-last)/1000);last=now;
+ if(playing){pt+=dt;if(recording){fc++;if(pt>=15){pt=15;recording=false;rec2.stop()}}else if(pt>=15)pt-=15}
  render(Math.min(pt,15));if(!dragging)sl.value=pt*10;tm.textContent=pt.toFixed(1)+' / 15.0 dtk';requestAnimationFrame(loop)}
 pp.onclick=function(){if(recording)return;playing=!playing;setPP()};
 $i('re').onclick=function(){if(recording)return;pt=0;playing=true;setPP()};
@@ -149,6 +149,7 @@ $i('aup').onchange=function(e){var f=e.target.files[0];if(f)setAud(f,true)};
 $i('axx').onclick=function(){setAud(null);idbSet('aud',null);$i('aup').value=''};
 $i('apv').onclick=function(){if(prev){stopPrev();return}if(!audFile)return;var a=new Audio(URL.createObjectURL(audFile));a.volume=Math.min(1,Math.max(0,(B.av==null?80:B.av)/100));a.loop=true;a.onloadedmetadata=function(){try{a.currentTime=Math.min(+B.as||0,Math.max(0,a.duration-1))}catch(e){}};a.play().catch(function(){});prev=a;$i('apv').textContent='Hentikan musik'};
 idbGet('aud',function(f){if(f)setAud(f,false)});
+document.querySelector('[data-p="av"]').addEventListener('input',function(){if(prev)prev.volume=Math.min(1,Math.max(0,this.value/100))});
 function cpTxt(s){if(navigator.clipboard&&navigator.clipboard.writeText)return navigator.clipboard.writeText(s);return Promise.reject()}
 $i('cp').onclick=function(){var s=JSON.stringify({tdi:1,S:S});cpTxt(s).then(function(){st.textContent='Pengaturan disalin. Tempel di halaman lain dengan tombol Tempel pengaturan.'}).catch(function(){$i('pw').hidden=false;$i('pt').value=s;$i('pt').select();st.textContent='Salin manual teks di kotak (Ctrl+C), lalu tempel di halaman lain.'})};
 $i('ps').onclick=function(){$i('pw').hidden=false;$i('pt').focus();st.textContent='Tempel teks pengaturan di kotak, lalu klik Terapkan.';try{navigator.clipboard.readText().then(function(t){if(t&&t.indexOf('"tdi"')>-1)$i('pt').value=t}).catch(function(){})}catch(e){}};
@@ -158,16 +159,17 @@ $i('rs2').value='1080';$i('fp').value='60';setRes(1080);
 rb.onclick=function(){
  if(recording)return;
  if(!window.MediaRecorder){st.textContent='Browser tidak mendukung perekaman. Gunakan Chrome, atau rekam layar.';return}
- stopPrev();var useA=!!audBuf,m=(useA?['video/mp4;codecs=avc1,mp4a.40.2','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm']:['video/mp4;codecs=avc1','video/webm;codecs=vp9','video/webm']).filter(function(k){return MediaRecorder.isTypeSupported(k)})[0],ch=[],cs=c.captureStream(+$i('fp').value),aNode=null;
-  if(useA){try{var ctx=acx();ctx.resume();var ds=ctx.createMediaStreamDestination(),g=ctx.createGain(),sr=ctx.createBufferSource(),v=(B.av==null?80:B.av)/100,T=ctx.currentTime+.05,off=Math.min(+B.as||0,Math.max(0,audBuf.duration-1));sr.buffer=audBuf;sr.loop=true;if(B.ai){g.gain.setValueAtTime(0,T);g.gain.linearRampToValueAtTime(v,T+1.5)}else g.gain.setValueAtTime(v,T);if(B.af){g.gain.setValueAtTime(v,T+13.4);g.gain.linearRampToValueAtTime(0,T+15)}sr.connect(g);g.connect(ds);sr.start(T,off);sr.stop(T+15.3);aNode=sr;cs=new MediaStream(cs.getVideoTracks().concat(ds.stream.getAudioTracks()))}catch(e){useA=false}}
+ stopPrev();var useA=!!audBuf,m=(useA?['video/mp4;codecs=avc1,mp4a.40.2','video/webm;codecs=vp9,opus','video/webm;codecs=vp8,opus','video/webm']:['video/mp4;codecs=avc1','video/webm;codecs=vp9','video/webm']).filter(function(k){return MediaRecorder.isTypeSupported(k)})[0],ch=[],cs=c.captureStream(+$i('fp').value),aNode=null,aGo=null;
+  if(useA){try{var ctx=acx();ctx.resume();var ds=ctx.createMediaStreamDestination(),g=ctx.createGain(),sr=ctx.createBufferSource(),v=(B.av==null?80:B.av)/100,off=Math.min(+B.as||0,Math.max(0,audBuf.duration-1));sr.buffer=audBuf;sr.loop=true;g.gain.value=0;sr.connect(g);g.connect(ds);aNode=sr;aGo=function(){var T=ctx.currentTime+.01;if(B.ai){g.gain.setValueAtTime(0,T);g.gain.linearRampToValueAtTime(v,T+1.5)}else g.gain.setValueAtTime(v,T);if(B.af){g.gain.setValueAtTime(v,T+13.4);g.gain.linearRampToValueAtTime(0,T+15)}sr.start(T,off);sr.stop(T+15.3)};cs=new MediaStream(cs.getVideoTracks().concat(ds.stream.getAudioTracks()))}catch(e){useA=false}}
   var r=new MediaRecorder(cs,{mimeType:m,videoBitsPerSecond:(c.width>=1080?20000000:10000000)});
  rec2=r;res.innerHTML='';
+ r.onstart=function(){pt=0;fc=0;ft0=performance.now();if(aGo)acx().resume().then(function(){try{aGo()}catch(e){}})};
  r.ondataavailable=function(e){ch.push(e.data)};
  r.onstop=function(){try{if(aNode)aNode.stop()}catch(e){}recording=false;rb.disabled=false;pt=0;playing=true;setPP();
   var ext=m.indexOf('mp4')>-1?'mp4':'webm',b=new Blob(ch,{type:m.split(';')[0]}),u=URL.createObjectURL(b);
   res.innerHTML='<video controls playsinline src="'+u+'"></video>';
   var a=document.createElement('a');a.className='btn';a.href=u;a.download='promo-tdi.'+ext;a.textContent='Unduh video ('+ext+')';res.appendChild(a);
-  setTimeout(function(){try{a.click()}catch(e){}},400);st.textContent='Rekaman selesai. Mengunduh otomatis… Jika tidak muncul, klik tombol Unduh video di bawah.'};
+  setTimeout(function(){try{a.click()}catch(e){}},400);var fp2=(fc/Math.max(1,(performance.now()-ft0)/1000)).toFixed(0);st.textContent='Rekaman selesai ('+c.width+'×'+c.height+', ±'+fp2+' fps). Mengunduh otomatis… Jika tidak muncul, klik tombol Unduh video di bawah.'};
  pt=0;playing=true;setPP();recording=true;rb.disabled=true;r.start();st.textContent='Merekam… tunggu 15 detik.'};
 (document.fonts?Promise.all([document.fonts.load('80px Anton'),document.fonts.load('700 28px "DM Sans"')]):Promise.resolve()).catch(function(){}).then(function(){last=performance.now();requestAnimationFrame(loop)});
 </script></body></html>
