@@ -38,12 +38,13 @@ input[type=range]{width:100%}
 #start button{font-size:20px;padding:12px 24px}
 .hint{color:var(--mu);font-size:12px}
 </style></head><body>
+<script src="https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.3/build/mp4-muxer.js"></script>
 <div class="app">
 <aside class="pn">
  <h3>Kanvas</h3>
  <div class="row"><select id="preset"><option value="736x920">4:5 Poster</option><option value="1080x1920">9:16 Story</option><option value="1080x1080">1:1 Square</option><option value="1920x1080">16:9 Wide</option></select></div>
  <div class="row">W<input type="number" id="sw" value="736" style="width:70px"> H<input type="number" id="sh" value="920" style="width:70px"> <input type="color" id="bg1" value="#5f9e72" title="gradasi 1"><input type="color" id="bg2" value="#86bb8e" title="gradasi 2"><input type="color" id="bg3" value="#a6d0a8" title="gradasi 3"><input type="color" id="bg4" value="#cfe8cd" title="gradasi 4"><span class="hint">4 warna gradasi</span></div><div class="row"><select id="bgmode"><option value="grad">Latar: Gradasi</option><option value="img">Latar: Gambar</option></select><input type="file" accept="image/*" id="bgf" style="width:150px"><select id="bgfit"><option value="cover">Cover (penuh)</option><option value="contain">Contain (muat)</option><option value="100% 100%">Regangkan</option><option value="auto">Ukuran asli</option></select><button id="bgx">✕ Hapus gambar BG</button><select id="bgp"><option value="none">Pola: Tanpa</option><option value="spiral" selected>Pola: Pusaran</option><option value="rays">Pola: Sinar</option><option value="dots">Pola: Titik</option><option value="waves">Pola: Gelombang</option></select><input type="color" id="bgp2" value="#ffa726" title="warna pola"></div>
- <h3>Sound Effect</h3><div id="snd"></div>
+ <details open><summary style="cursor:pointer;margin-bottom:6px"><h3 style="display:inline">Sound Effect</h3></summary><div id="snd"></div></details>
  <h3>Layer</h3>
  <div class="layers" id="list"></div>
  <div class="row"><button onclick="addL('prod')">+ Produk</button><button onclick="addL('text')">+ Teks</button><button onclick="addL('price')">+ Diskon</button><button onclick="addL('deco')">+ Gambar/Dekor</button><button id="addpng">+ PNG (bisa banyak)</button><input type="file" id="pngin" accept="image/*" multiple style="display:none"></div>
@@ -52,10 +53,10 @@ input[type=range]{width:100%}
 <main class="main">
  <div class="pn row" style="margin:0">
   <button id="un" title="Undo (Ctrl+Z)">↶ Undo</button><button id="re" title="Redo (Ctrl+Y)">↷ Redo</button><button class="pri" id="pp">⏸ Jeda</button><button id="rs">↺ Ulang intro</button>
-  <label>🔊 <input type="range" id="vol" min="0" max="1" step=".05" value=".6" style="width:90px"></label>
+  <label>🔊 <input type="range" id="vol" min="0" max="1" step=".05" value=".6" style="width:90px"></label><label title="Geser jika suara terasa telat/terlalu cepat (mis. speaker Bluetooth)">⏱ Sinkron <input type="range" id="asy" min="-300" max="300" step="10" value="0" style="width:90px"><span id="asyv" class="hint">0 ms</span></label>
   <label>Zoom <input type="range" id="zm" min="0" max=".2" step=".01" value=".05" style="width:80px"></label>
   <label>Kecepatan <input type="range" id="spd" min=".3" max="2.5" step=".1" value="1" style="width:80px"></label>
-  <label>Durasi <input type="number" id="dur" value="15" min="3" max="60" style="width:52px">dtk</label><label><input type="checkbox" id="fxs" checked> ✨ Kilau</label><label><input type="checkbox" id="fxc" checked> 🎉 Confetti</label><label><input type="checkbox" id="bgm" checked> 🌊 BG gerak</label><label><input type="checkbox" id="bgl"> 💡 Cahaya/bokeh</label><select id="intro"><option value="">Transisi awal: per layer</option><option value="drop">Semua: Jatuh</option><option value="left">Semua: Dari kiri</option><option value="right">Semua: Dari kanan</option><option value="up">Semua: Dari bawah</option><option value="pop">Semua: Pop</option><option value="spin">Semua: Putar</option><option value="fade">Semua: Fade</option><option value="basket">Produk: Keluar dari keranjang</option></select><label>Zoom elemen <input type="range" id="zg" min="0" max=".3" step=".01" value=".06" style="width:70px"></label><label>Bergantian <input type="range" id="zo" min="0" max=".5" step=".01" value=".25" style="width:70px"></label><label>Halus <input type="range" id="zk" min="0" max="1" step=".05" value=".6" style="width:70px"></label><label>Siklus <input type="range" id="zn" min="1" max="8" step="1" value="3" style="width:60px"></label><span id="tm" class="hint">0.0 / 15</span><span id="sv" class="hint"></span><select id="xs"><option value="1">JPEG 1x</option><option value="2" selected>JPEG 2x</option><option value="3">JPEG 3x (maks)</option></select><button id="jpg">⬇ JPEG kualitas terbaik</button><button id="rstp">🗑 Reset proyek</button><button id="rec">⏺ Rekam video</button>
+  <label>Durasi <input type="number" id="dur" value="15" min="3" max="60" style="width:52px">dtk</label><label><input type="checkbox" id="fxs" checked> ✨ Kilau</label><label><input type="checkbox" id="fxc" checked> 🎉 Confetti</label><label><input type="checkbox" id="bgm" checked> 🌊 BG gerak</label><label><input type="checkbox" id="bgl"> 💡 Cahaya/bokeh</label><select id="intro"><option value="">Transisi awal: per layer</option><option value="drop">Semua: Jatuh</option><option value="left">Semua: Dari kiri</option><option value="right">Semua: Dari kanan</option><option value="up">Semua: Dari bawah</option><option value="pop">Semua: Pop</option><option value="spin">Semua: Putar</option><option value="fade">Semua: Fade</option><option value="basket">Produk: Keluar dari keranjang</option></select><label>Zoom elemen <input type="range" id="zg" min="0" max=".3" step=".01" value=".06" style="width:70px"></label><label>Bergantian <input type="range" id="zo" min="0" max=".5" step=".01" value=".25" style="width:70px"></label><label>Halus <input type="range" id="zk" min="0" max="1" step=".05" value=".6" style="width:70px"></label><label>Siklus <input type="range" id="zn" min="1" max="8" step="1" value="3" style="width:60px"></label><span id="tm" class="hint">0.0 / 15</span><span id="sv" class="hint"></span><select id="xs"><option value="1">Skala 1x</option><option value="2">Skala 2x</option><option value="3" selected>Skala 3x (terbaik)</option></select><button id="jpg">⬇ JPEG kualitas terbaik</button><button id="vid">🎬 Video MP4 60 FPS</button><button id="rstp">🗑 Reset proyek</button><button id="rec">⏺ Rekam video</button>
  </div>
  <div style="height:4px;background:var(--bd);border-radius:2px"><div id="bar" style="height:4px;background:var(--ac);width:0;border-radius:2px"></div></div><div id="wrap"><div id="scaler"><div id="stage"><canvas id="fx" style="position:absolute;inset:0;pointer-events:none;z-index:50"></canvas><canvas id="bgc" style="position:absolute;inset:0;pointer-events:none;z-index:-100"></canvas><div id="start"><button class="pri">▶ Mulai + Suara</button></div></div></div></div>
  <div class="hint">Seret elemen di kanvas untuk memindahkan. Rekam: pilih tab ini saat diminta browser, lalu hentikan untuk mengunduh .webm.</div>
@@ -144,12 +145,60 @@ let dr=null;st.addEventListener('pointerdown',e=>{const d=e.target.closest('.ly'
 st.addEventListener('pointermove',e=>{if(!dr)return;const r=st.getBoundingClientRect(),l=L[dr.i];l.x=Math.round((e.clientX-r.left)/r.width*200)/2;l.y=Math.round((e.clientY-r.top)/r.height*200)/2;ctl()});
 addEventListener('pointerup',()=>{if(dr)commit();dr=null});
 // audio
-function ac(){if(!AC){AC=new(window.AudioContext||window.webkitAudioContext)();mg=AC.createGain();mg.connect(AC.destination)}mg.gain.value=+$('vol').value;if(AC.state==='suspended')AC.resume()}
-$('vol').oninput=()=>{if(mg)mg.gain.value=+$('vol').value};
-function tone(f1,f2,d,type='sine',g=.5,at=0){if(!AC)return;const t=AC.currentTime+at,o=AC.createOscillator(),v=AC.createGain();o.type=type;o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(f2,t+d);v.gain.setValueAtTime(g,t);v.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(v);v.connect(OUT||mg);o.start(t);o.stop(t+d)}
-function whoosh0(){if(!AC)return;const n=AC.sampleRate*.7,b=AC.createBuffer(1,n,AC.sampleRate),a=b.getChannelData(0);for(let i=0;i<n;i++)a[i]=(Math.random()*2-1)*(1-i/n);const s=AC.createBufferSource(),f=AC.createBiquadFilter(),v=AC.createGain();s.buffer=b;f.type='bandpass';f.Q.value=2;f.frequency.setValueAtTime(300,AC.currentTime);f.frequency.exponentialRampToValueAtTime(3500,AC.currentTime+.6);v.gain.value=.5;s.connect(f);f.connect(v);v.connect(OUT||mg);s.start()}
-const pop0=()=>{tone(600,180,.18,'sine',.6);tone(1200,500,.08,'triangle',.2)};
-const chime0=()=>{tone(1318,1318,.5,'sine',.15);tone(1760,1760,.6,'sine',.12,.12)};
+// ===== AUDIO v2: jadwal presisi (lookahead), tanpa klik, kompresor lembut =====
+let OUT=null,LG=0,BT=0,PIT=0,BUS=null,NB=null,ASY=0,LP=0,SC=-1,PD=0;
+try{ASY=+localStorage.getItem('natvia-asy')||0}catch(e){}
+const getD=()=>Math.max(3,+$('dur').value||15);
+function mkMaster(c){const m=c.createGain(),k=c.createDynamicsCompressor();k.threshold.value=-14;k.knee.value=16;k.ratio.value=3.5;k.attack.value=.004;k.release.value=.2;m.connect(k);k.connect(c.destination);return m}
+function ac(){if(!AC){const C=window.AudioContext||window.webkitAudioContext;try{AC=new C({latencyHint:'interactive'})}catch(e){AC=new C()}mg=mkMaster(AC)}mg.gain.value=+$('vol').value;if(AC.state==='suspended')AC.resume()}
+$('vol').oninput=()=>{if(AC&&mg)mg.gain.setTargetAtTime(+$('vol').value,AC.currentTime,.015)};
+$('asy').value=ASY;$('asyv').textContent=ASY+' ms';
+$('asy').oninput=()=>{ASY=+$('asy').value;$('asyv').textContent=ASY+' ms';try{localStorage.setItem('natvia-asy',ASY)}catch(e){}};
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&AC&&AC.state!=='running')AC.resume()});
+function busNode(){if(!BUS||BUS.context!==AC){BUS=AC.createGain();BUS.connect(mg)}return BUS}
+function killBus(){const b=BUS;BUS=null;if(!b||!AC||b.context!==AC)return;try{const t=AC.currentTime;b.gain.cancelScheduledValues(t);b.gain.setValueAtTime(b.gain.value,t);b.gain.linearRampToValueAtTime(0,t+.04)}catch(e){}setTimeout(()=>{try{b.disconnect()}catch(e){}},400)}
+// envelope halus: attack singkat -> decay eksponensial -> nol (tanpa klik di awal/akhir suara)
+function tone(f1,f2,d,type='sine',g=.5,at=0,a=.004){if(!AC)return;const k=Math.pow(2,PIT/12),t=BT+at,o=AC.createOscillator(),v=AC.createGain();a=Math.min(a,d*.4);
+ o.type=type;o.frequency.setValueAtTime(f1*k,t);o.frequency.exponentialRampToValueAtTime(Math.max(20,f2*k),t+d);
+ v.gain.setValueAtTime(.0001,t);v.gain.linearRampToValueAtTime(g,t+a);v.gain.exponentialRampToValueAtTime(.0008,t+d);v.gain.linearRampToValueAtTime(0,t+d+.02);
+ o.connect(v);v.connect(OUT||mg);o.start(t);o.stop(t+d+.04)}
+function noiseBuf(){if(!NB){const b=AC.createBuffer(1,48000,48000),a=b.getChannelData(0);for(let i=0;i<48000;i++)a[i]=Math.random()*2-1;NB=b}return NB}
+function noise(d,f1,f2,q,g,at=0,a=.01,type='bandpass'){if(!AC)return;const k=Math.pow(2,PIT/12),t=BT+at,s=AC.createBufferSource(),f=AC.createBiquadFilter(),v=AC.createGain();
+ s.buffer=noiseBuf();s.loop=true;f.type=type;f.Q.value=q;f.frequency.setValueAtTime(f1*k,t);f.frequency.exponentialRampToValueAtTime(Math.max(20,f2*k),t+d);
+ v.gain.setValueAtTime(.0001,t);v.gain.linearRampToValueAtTime(g,t+Math.min(a,d*.5));v.gain.exponentialRampToValueAtTime(.0008,t+d);v.gain.linearRampToValueAtTime(0,t+d+.03);
+ s.connect(f);f.connect(v);v.connect(OUT||mg);s.start(t,Math.random()*.4);s.stop(t+d+.05)}
+// when = waktu jam AudioContext (realtime) atau detik timeline (saat render video)
+function sfxAt(k,when,o){const s=SND[k];if(!AC||!s||!s.on)return;o=o||{};
+ if(REC.on){REC.ev.push({k,t:when,pit:o.pit||0,v:o.v||1});return}
+ const g=AC.createGain();g.gain.value=s.v*(o.v||1);g.connect(busNode());const t=Math.max(when,AC.currentTime+.001);
+ if(s.buf){const b=AC.createBufferSource();b.buffer=s.buf;b.connect(g);b.start(t);return}
+ OUT=g;BT=t;PIT=o.pit||0;try{(PR[s.p]||PR.pop)()}finally{OUT=null;PIT=0}}
+function sfx(k,o){if(AC)sfxAt(k,REC.on?REC.t:AC.currentTime,o)}
+// ---- Timing bersama: dipakai animasi, konfeti, dan cue suara supaya selalu identik ----
+function lat(){const o=(AC.outputLatency||0)+(AC.baseLatency||0);return Math.min(.15,Math.max(.015,o||.04))}
+let LN_=null,LB_=null;
+function landFrac(bm){ // fraksi durasi saat elemen benar-benar "menyentuh" posisi akhirnya
+ if(bm){if(LB_==null){LB_=1;for(let t=0;t<=1;t+=.002){if(ease(t)*(.4+.6*t*t*(3-2*t))>=.995){LB_=t;break}}}return LB_}
+ if(LN_==null){LN_=1;for(let t=0;t<=1;t+=.002){if(ease(t)>=.995){LN_=t;break}}}return LN_}
+function tmg(l,i,BMA){const bm=l.in==='basket'&&l.type!=='basket',m0=l.in||'drop',m=(m0==='basket'&&l.type==='basket')?'pop':m0,del=(l.type==='basket'&&BMA)?.1:bm?.7+i*.3:.6+i*.25,dur=bm?1:.9,
+ lo=bm?landFrac(1)*dur:m==='fade'?.1:m==='pop'?.22:landFrac(0)*dur;return{bm,m,del,dur,lo,at:del+lo}}
+const PENT=[0,2,4,7,9,12,14,16,19,21];
+// Daftar cue suara dihitung ulang dari layer yang ada -> elemen baru otomatis dapat suara yang pas
+function cuesOf(D){const cs=[{t:0,k:'intro'}],BMA=L.some(x=>x.in==='basket');let np=0,nd=0;
+ L.forEach((l,i)=>{if(!l.vis)return;const g=tmg(l,i,BMA);
+  if(l.type==='prod'){const v=((np++*3)%5-2)*.8;if(g.bm)cs.push({t:g.del+.03,k:'launch',pit:v*.7});cs.push({t:g.at,k:'land',pit:v})}
+  else if(l.type==='basket')cs.push({t:g.at,k:'land',pit:-5,v:1.05});
+  else if(l.type==='text')cs.push({t:Math.max(g.del+.02,g.at-.18),k:'text'});
+  else if(l.type==='price'){const s=l.ps==null?1.4:l.ps;cs.push({t:s+.04,k:'pricein'},{t:s+.6,k:'strike'},{t:s+1.25,k:'chime'})}
+  else cs.push({t:g.at,k:'deco',pit:PENT[(nd++)%6]-5})});
+ for(let k=5;k<D;k+=5)cs.push({t:k,k:'chime'});
+ return cs.filter(c=>c.t>=0&&c.t<D)}
+// Penjadwal: tiap frame, jadwalkan semua cue yang jatuh dalam jendela lookahead memakai jam audio (bukan "mendeteksi" per frame)
+function pump(D,sp,absT){if(!AC)return;if(SC<0&&absT>.3)SC=absT;if(D!==PD){PD=D;if(SC>=0)SC=absT}
+ const adv=Math.max(0,lat()-.025)-ASY/1000,hi=EXP?absT:absT+(Math.max(0,adv)+.12)*sp,cs=cuesOf(D);
+ for(let k=Math.max(0,Math.floor(SC/D));k<=Math.floor(hi/D);k++)for(const c of cs){const t=c.t+k*D;if(t>SC&&t<=hi)sfxAt(c.k,EXP?t:Math.max(AC.currentTime+.002,AC.currentTime+(t-absT)/sp-adv),c)}
+ SC=hi}
+// ---- akhir timing ----
 // anim
 let parts=[];const COL=['#ffd84d','#ffffff','#ff6fae','#6cc04a','#4aa8ff','#ff8a3d'];
 function spark(x,y){if(AC&&performance.now()-LG>1400){LG=performance.now();sfx('glint')}parts.push({k:0,x,y,l:0,m:.7+Math.random()*.7,r:6+Math.random()*10,a:Math.random()*1.5})}
@@ -165,8 +214,8 @@ function drawBg(T,D){const cv=$('bgc'),c=cv.getContext('2d'),W=cv.width,H=cv.hei
  for(let i=0;i<16;i++){const ph=i*1.7,x=W*(.5+.5*Math.sin(a2*(1+i%3)+ph)),y=H*(.5+.5*Math.cos(a2*(1+i%2)+ph*1.3)),r=Math.min(W,H)*(.05+.07*((i*37)%10)/10),al=.5+.5*Math.sin(a2*2+ph),rg=c.createRadialGradient(x,y,0,x,y,r);rg.addColorStop(0,`rgba(255,255,255,${.1+.25*al})`);rg.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=rg;c.beginPath();c.arc(x,y,r,0,6.2832);c.fill()}}
 let BGI='';const bgImg=new Image();
 let HS=[],hi=-1,svT;
-const gs=()=>JSON.stringify({L,w:$('sw').value,h:$('sh').value,c:['bg1','bg2','bg3','bg4'].map(i=>$(i).value),fit:$('bgfit').value,bp:[$('bgp').value,$('bgp2').value,$('bgmode').value],bgi:BGI,bgm:$('bgm').checked,bgl:$('bgl').checked,fxs:$('fxs').checked,fxc:$('fxc').checked,dur:$('dur').value,z3:[$('zg').value,$('zo').value,$('zk').value,$('zn').value],sk:Object.fromEntries(Object.entries(SND).map(([k,s])=>[k,{p:s.p,v:s.v,on:s.on}]))});
-function ap(s){const o=JSON.parse(s);L=o.L;$('sw').value=o.w;$('sh').value=o.h;['bg1','bg2','bg3','bg4'].forEach((i,k)=>{if(o.c[k])$(i).value=o.c[k]});$('bgfit').value=o.fit||'cover';if(o.bp){$('bgp').value=o.bp[0];$('bgp2').value=o.bp[1];$('bgmode').value=o.bp[2]||(o.bgi?'img':'grad')}else if(o.bgi)$('bgmode').value='img';BGI=o.bgi||'';bgImg.src=BGI;$('bgm').checked=o.bgm!==false;$('bgl').checked=!!o.bgl;$('fxs').checked=o.fxs!==false;$('fxc').checked=o.fxc!==false;$('dur').value=o.dur||15;if(o.z3){['zg','zo','zk','zn'].forEach((i,k)=>{if(o.z3[k]!=null)$(i).value=o.z3[k]});zsync()}if(o.sk)for(const k in o.sk)Object.assign(SND[k],o.sk[k]);sndUI();sel=Math.max(0,Math.min(sel,L.length-1));build(0)}
+const gs=()=>JSON.stringify({L,w:$('sw').value,h:$('sh').value,c:['bg1','bg2','bg3','bg4'].map(i=>$(i).value),fit:$('bgfit').value,bp:[$('bgp').value,$('bgp2').value,$('bgmode').value],bgi:BGI,bgm:$('bgm').checked,bgl:$('bgl').checked,fxs:$('fxs').checked,fxc:$('fxc').checked,dur:$('dur').value,z3:[$('zg').value,$('zo').value,$('zk').value,$('zn').value],sk:Object.fromEntries(Object.entries(SND).map(([k,s])=>[k,{p:s.p,v:s.v,on:s.on}])),snv:2});
+function ap(s){const o=JSON.parse(s);L=o.L;$('sw').value=o.w;$('sh').value=o.h;['bg1','bg2','bg3','bg4'].forEach((i,k)=>{if(o.c[k])$(i).value=o.c[k]});$('bgfit').value=o.fit||'cover';if(o.bp){$('bgp').value=o.bp[0];$('bgp2').value=o.bp[1];$('bgmode').value=o.bp[2]||(o.bgi?'img':'grad')}else if(o.bgi)$('bgmode').value='img';BGI=o.bgi||'';bgImg.src=BGI;$('bgm').checked=o.bgm!==false;$('bgl').checked=!!o.bgl;$('fxs').checked=o.fxs!==false;$('fxc').checked=o.fxc!==false;$('dur').value=o.dur||15;if(o.z3){['zg','zo','zk','zn'].forEach((i,k)=>{if(o.z3[k]!=null)$(i).value=o.z3[k]});zsync()}if(o.sk)for(const k in o.sk){if(!SND[k])continue;const x={...o.sk[k]};if(!o.snv&&OLDP[k]===x.p)delete x.p;Object.assign(SND[k],x)}sndUI();sel=Math.max(0,Math.min(sel,L.length-1));build(0)}
 function save(){clearTimeout(svT);svT=setTimeout(()=>{try{localStorage.setItem('natvia-proj',HS[hi]);$('sv').textContent='✓ tersimpan'}catch(e){$('sv').textContent='⚠ tidak tersimpan (gambar terlalu besar)'}},400)}
 function commit(){const s=gs();if(s===HS[hi])return;HS=HS.slice(0,hi+1);HS.push(s);if(HS.length>40)HS.shift();hi=HS.length-1;save()}
 function undo(){if(hi>0){hi--;ap(HS[hi]);save()}}
@@ -187,13 +236,27 @@ $('jpg').onclick=async()=>{try{const sc=+$('xs').value,w=st.offsetWidth,h=st.off
  const im=new Image();await new Promise((r,j)=>{im.onload=r;im.onerror=j;im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)});
  const cv=document.createElement('canvas');cv.width=w*sc;cv.height=h*sc;const c=cv.getContext('2d');c.fillStyle='#fff';c.fillRect(0,0,cv.width,cv.height);c.drawImage(im,0,0);
  cv.toBlob(b=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='produk-'+w*sc+'x'+h*sc+'.jpg';a.click()},'image/jpeg',1)}catch(e){alert('Gagal membuat JPEG di browser ini. Coba Chrome/Edge. ('+(e.message||e)+')')}};
-let OUT=null,LG=0;
-const SN={intro:'Intro (awal video)',land:'Produk mendarat',chime:'Chime berkala',glint:'Kilau elegan'};
-const PRN={whoosh:'Whoosh',whoosh2:'Swoosh rendah',pop:'Pop',bubble:'Bubble',boing:'Boing',tick:'Tick',chime:'Chime',bell:'Bell',harp:'Harp',coin:'Koin',glint:'Glint',drum:'Drum'};
-const PR={whoosh:whoosh0,whoosh2:()=>tone(120,900,.5,'sawtooth',.15),pop:pop0,bubble:()=>tone(300,900,.12,'sine',.5),boing:()=>tone(200,520,.25,'triangle',.5),tick:()=>tone(1800,1200,.05,'square',.15),chime:chime0,bell:()=>{tone(880,880,1,'sine',.3);tone(1760,1760,.8,'sine',.12);tone(2637,2637,.5,'sine',.06)},harp:()=>[1046,1318,1568,2093].forEach((f,i)=>tone(f,f,.5,'triangle',.18,i*.08)),coin:()=>{tone(988,988,.08,'square',.15);tone(1319,1319,.35,'square',.15,.08)},glint:()=>{tone(2400,3600,.15,'sine',.15);tone(3200,3200,.3,'sine',.08,.05)},drum:()=>tone(120,40,.3,'sine',.9)};
-const SND={intro:{p:'whoosh',v:.8,on:1},land:{p:'pop',v:.8,on:1},chime:{p:'chime',v:.7,on:1},glint:{p:'glint',v:.5,on:1}};
-function sfx(k){const s=SND[k];if(!AC||!s||!s.on)return;const g=AC.createGain();g.gain.value=s.v;g.connect(mg);if(s.buf){const b=AC.createBufferSource();b.buffer=s.buf;b.connect(g);b.start();return}OUT=g;try{PR[s.p]()}finally{OUT=null}}
-function whoosh(){sfx('intro')}function pop(){sfx('land')}function chime(){sfx('chime')}
+const SN={intro:'Intro (awal video)',launch:'Produk keluar keranjang',land:'Produk mendarat',text:'Teks muncul',deco:'Dekor / PNG muncul',pricein:'Diskon muncul',strike:'Harga dicoret',chime:'Harga baru + chime berkala',glint:'Kilau elegan'};
+const PRN={whoosh:'Whoosh',whoosh2:'Swoosh rendah',pop:'Pop',thud:'Thud mendarat',launch:'Pop keluar',swish:'Swish teks',sparkle:'Sparkle',zip:'Zip coret',bubble:'Bubble',boing:'Boing',tick:'Tick',chime:'Chime',bell:'Bell',harp:'Harp',coin:'Koin',glint:'Glint',drum:'Drum'};
+const PR={whoosh:()=>{noise(.75,260,3800,1.3,.5,0,.2);tone(140,520,.7,'sine',.07,0,.2)},
+ whoosh2:()=>{noise(.5,140,1300,1,.38,0,.14);tone(110,520,.5,'triangle',.1,0,.12)},
+ pop:()=>{tone(560,170,.17,'sine',.6,0,.003);tone(1250,520,.07,'triangle',.18,0,.002)},
+ thud:()=>{tone(200,55,.26,'sine',.85,0,.004);tone(760,250,.09,'triangle',.2,0,.002);noise(.06,2600,900,.9,.14,0,.002)},
+ launch:()=>{noise(.16,500,2400,1.3,.2,0,.025);tone(240,560,.11,'sine',.3,0,.006)},
+ swish:()=>{noise(.3,1100,5200,1.1,.24,0,.07);tone(700,1500,.2,'sine',.05,.02,.04)},
+ sparkle:()=>{[1568,1976,2349].forEach((f,i)=>tone(f,f*1.003,.42-i*.06,'sine',.12-i*.025,i*.05,.004));noise(.2,6500,9000,2,.04,.02,.015)},
+ zip:()=>{noise(.22,3400,700,1.6,.2,0,.01);tone(1500,380,.16,'triangle',.08,0,.005)},
+ bubble:()=>tone(300,900,.12,'sine',.5,0,.004),
+ boing:()=>tone(200,520,.25,'triangle',.5,0,.004),
+ tick:()=>tone(1800,1200,.05,'square',.12,0,.002),
+ chime:()=>{tone(1318,1318,.55,'sine',.15,0,.006);tone(1760,1760,.65,'sine',.12,.12,.006)},
+ bell:()=>{tone(880,880,1,'sine',.3,0,.004);tone(1760,1760,.8,'sine',.12,0,.004);tone(2637,2637,.5,'sine',.06,0,.004)},
+ harp:()=>[1046,1318,1568,2093].forEach((f,i)=>tone(f,f,.5,'triangle',.18,i*.08,.005)),
+ coin:()=>{tone(988,988,.08,'square',.12,0,.003);tone(1319,1319,.35,'square',.12,.08,.003)},
+ glint:()=>{tone(2400,3600,.16,'sine',.15,0,.006);tone(3200,3200,.3,'sine',.08,.05,.006)},
+ drum:()=>tone(120,40,.3,'sine',.9,0,.004)};
+const SND={intro:{p:'whoosh',v:.8,on:1},launch:{p:'launch',v:.6,on:1},land:{p:'thud',v:.85,on:1},text:{p:'swish',v:.5,on:1},deco:{p:'sparkle',v:.5,on:1},pricein:{p:'pop',v:.7,on:1},strike:{p:'zip',v:.6,on:1},chime:{p:'chime',v:.7,on:1},glint:{p:'glint',v:.5,on:1}};
+const OLDP={intro:'whoosh',land:'pop',chime:'chime',glint:'glint'};
 function sndUI(){$('snd').innerHTML=Object.keys(SND).map(k=>{const s=SND[k];return `<div style="margin-bottom:8px;padding:6px;border:1px solid var(--bd);border-radius:8px"><div class="row" style="margin:0 0 4px"><label><input type="checkbox" data-s="${k}" data-f="on" ${s.on?'checked':''}> ${SN[k]}</label><button data-play="${k}">▶</button></div><div class="row" style="margin:0 0 4px"><select data-s="${k}" data-f="p" style="flex:1">${Object.keys(PRN).map(p=>`<option value="${p}"${s.p===p?' selected':''}>${PRN[p]}</option>`).join('')}</select><input type="range" data-s="${k}" data-f="v" min="0" max="1" step=".05" value="${s.v}" style="width:70px"></div><div class="row" style="margin:0"><input type="file" accept="audio/*" data-up="${k}" style="width:150px;font-size:11px">${s.buf?`<span class="hint">${esc(s.name)}</span><button data-clr="${k}">✕</button>`:''}</div></div>`}).join('');
  const q=$('snd');q.querySelectorAll('[data-f]').forEach(e=>{const h=()=>{const s=SND[e.dataset.s],f=e.dataset.f;s[f]=f==='on'?(e.checked?1:0):f==='v'?+e.value:e.value;if(f==='p'){s.buf=null;s.name=''}};e.oninput=h;e.onchange=()=>{h();if(e.dataset.f==='p'){sndUI();ac();sfx(e.dataset.s)}commit()}});
  q.querySelectorAll('[data-play]').forEach(b=>b.onclick=()=>{ac();sfx(b.dataset.play)});
@@ -221,9 +284,9 @@ function pAnim(l,d,T,D){const po=d.querySelector('.po'),sk2=d.querySelector('.st
  pn.style.opacity=pt>0?1:0;
  c[0].style.transform=`translateX(${-40*(1-pop(0))}px) scale(${pop(0)})`;c[1].style.transform=`scale(${pop(.1)})`;c[2].style.transform=`scale(${pop(.05)*pu}) rotate(${-10*(1-pop(.05))}deg)`;c[3].style.transform=`scale(${pop(.2)})`;
  let g=PG.get(l)||0;if(t<0)g=0;
- if(playing){if(t>0&&g<1){g=1;sfx('land')}if(t>.6&&g<2){g=2;if(AC)tone(900,250,.18,'sawtooth',.18)}if(t>1.25&&g<3){g=3;sfx('chime');burst(l.x/100*st.offsetWidth,l.y/100*st.offsetHeight,32,l)}
+ if(playing){if(t>1.25&&g<3){g=3;burst(l.x/100*st.offsetWidth,l.y/100*st.offsetHeight,32,l)}
   const n=Math.floor((t-1.9)/2.4);if(t<1.9)PG2.delete(l);else if(PG2.get(l)!==n){PG2.set(l,n);if($('fxs').checked)[[-.14,.05],[.2,-.02],[.02,0]].forEach(q=>sparkAt(l,q[0],q[1]))}}
- PG.set(l,g)}
+ PG.set(l,g);PV.set(l,{po:[cl(t*8),H*.3*(1-sh),a*k],u,pn:pt>0?1:0,p:[pop(0),pop(.1),pop(.05),pop(.2)],pu})}
 function bkPaint(d,l){d.innerHTML=bk3d(l,'f');if(!d._bk){const b=document.createElement('div');b.className='ly';b.style.pointerEvents='none';st.appendChild(b);d._bk=b}d._bk.style.width=l.w+'px';d._bk.style.height=l.h+'px';d._bk.innerHTML=bk3d(l,'b')}
 function bk3d(l,part){const w=l.w,h=l.h,c=l.c,q=a=>a.map(p=>(p[0]*w).toFixed(1)+','+(p[1]*h).toFixed(1)).join(' '),lp=(a,b,t)=>[a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t],F=[[.04,.36],[.82,.36],[.76,.98],[.10,.98]],S=[[.82,.36],[.98,.22],[.93,.80],[.76,.98]],T=[[.04,.36],[.20,.22],[.98,.22],[.82,.36]],pg=(a,f,o)=>`<polygon points="${q(a)}" fill="${f}" ${o||''}/>`,ln=(a,b,sw,col)=>`<line x1="${a[0]*w}" y1="${a[1]*h}" x2="${b[0]*w}" y2="${b[1]*h}" stroke="${col}" stroke-width="${sw}" stroke-linecap="round"/>`;
  let s=`<svg width="100%" height="100%" viewBox="0 0 ${w} ${h}" style="overflow:visible">`;
@@ -248,12 +311,84 @@ function bgPat(c,W,H,a){const m=$('bgp').value;if(m==='none')return;const col=$(
 function bkShadow(l,w,h){const k=Math.max(0,l.sh==null?.5:l.sh)*2;if(!k)return '';return `<defs><filter id="bsA" x="-60%" y="-300%" width="220%" height="700%"><feGaussianBlur stdDeviation="${w*.045}"/></filter><filter id="bsB" x="-60%" y="-300%" width="220%" height="700%"><feGaussianBlur stdDeviation="${w*.014}"/></filter></defs><ellipse cx="${w*.56}" cy="${h*1.01}" rx="${w*.56}" ry="${h*.1}" fill="#000" opacity="${Math.min(.5,.2*k)}" filter="url(#bsA)"/><ellipse cx="${w*.5}" cy="${h*.995}" rx="${w*.42}" ry="${h*.03}" fill="#000" opacity="${Math.min(.7,.45*k)}" filter="url(#bsB)"/>`}
 $('addpng').onclick=()=>$('pngin').click();
 $('pngin').onchange=e=>{[...e.target.files].forEach(f=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const w=Math.min(300,im.naturalWidth),h=Math.round(w*im.naturalHeight/im.naturalWidth);L.push(Object.assign(newDeco(),{name:f.name.slice(0,24),img:r.result,w,h,sp:0,fl:10,z:Math.max(...L.map(a=>a.z==null?0:a.z))+1}));sel=L.length-1;build()};im.src=r.result};r.readAsDataURL(f)});e.target.value=''};
+let EXP=false,XC=false;const REC={on:false,ev:[],t:0};
+async function snapTo(W,H,g){const w=st.offsetWidth,h=st.offsetHeight,cl=st.cloneNode(true);
+ cl.style.cssText+=';transform:none;box-shadow:none;position:relative;overflow:hidden;font-family:Fredoka,system-ui,sans-serif';cl.removeAttribute('id');cl.setAttribute('xmlns','http://www.w3.org/1999/xhtml');
+ const o=st.querySelectorAll('canvas'),n=cl.querySelectorAll('canvas');n.forEach((c,i)=>{const im=document.createElement('img');im.setAttribute('src',o[i].toDataURL());im.style.cssText='position:absolute;left:0;top:0;width:100%;height:100%;z-index:'+c.style.zIndex;c.replaceWith(im)});
+ cl.querySelectorAll('#start').forEach(e=>e.remove());cl.querySelectorAll('.sel').forEach(e=>e.classList.remove('sel'));
+ const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${w} ${h}"><style>${CSSX}</style><foreignObject width="${w}" height="${h}">${new XMLSerializer().serializeToString(cl)}</foreignObject></svg>`;
+ const im=new Image();await new Promise((r,j)=>{im.onload=r;im.onerror=j;im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)});g.fillStyle='#fff';g.fillRect(0,0,W,H);g.drawImage(im,0,0)}
+function snapGo(W,H,cv,fc){const w=st.offsetWidth,h=st.offsetHeight,g=cv.getContext('2d'),im2=$('bgmode').value==='img'&&!!BGI;
+ g.fillStyle=im2?'#111':'#fff';g.fillRect(0,0,W,H);g.drawImage($('bgc'),0,0,W,H);
+ const f=fc.getContext('2d');f.clearRect(0,0,w,h);f.drawImage($('fx'),0,0);
+ const cl=st.cloneNode(true);cl.style.cssText+=';transform:none;box-shadow:none;background:none;position:relative;overflow:hidden;font-family:Fredoka,system-ui,sans-serif';cl.removeAttribute('id');cl.setAttribute('xmlns','http://www.w3.org/1999/xhtml');
+ cl.querySelectorAll('canvas,#start').forEach(e=>e.remove());cl.querySelectorAll('.sel').forEach(e=>e.classList.remove('sel'));
+ const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${w} ${h}"><style>${CSSX}</style><foreignObject width="${w}" height="${h}">${new XMLSerializer().serializeToString(cl)}</foreignObject></svg>`,im=new Image();
+ return new Promise((r,j)=>{im.onload=()=>{g.drawImage(im,0,0);g.drawImage(fc,0,0,W,H);r()};im.onerror=j;im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)})}
+const BC=new Map(),PV=new WeakMap(),TMP=document.createElement('canvas');
+async function layerBmp(el,l,sc){const bw=el.offsetWidth,bh=el.offsetHeight,M=70,cl=el.cloneNode(true),S=cl.style;S.position='absolute';S.left=M+'px';S.top=M+'px';S.transform='none';S.opacity='1';S.display='flex';
+ cl.querySelectorAll('.shn').forEach(x=>x.remove());cl.classList.remove('sel');if(l.type==='text'){S.backgroundImage='none';S.webkitTextFillColor=l.c}
+ const TW=bw+2*M,TH=bh+2*M,svg=`<svg xmlns="http://www.w3.org/2000/svg" width="${TW*sc}" height="${TH*sc}" viewBox="0 0 ${TW} ${TH}"><style>${CSSX}</style><foreignObject width="${TW}" height="${TH}"><div xmlns="http://www.w3.org/1999/xhtml" style="position:relative;width:${TW}px;height:${TH}px;font-family:Fredoka,system-ui,sans-serif">${new XMLSerializer().serializeToString(cl)}</div></foreignObject></svg>`,im=new Image();
+ await new Promise((r,j)=>{im.onload=r;im.onerror=j;im.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg)});
+ const cv=document.createElement('canvas');cv.width=Math.round(TW*sc);cv.height=Math.round(TH*sc);cv.getContext('2d').drawImage(im,0,0);return{cv,bw,bh,M,sc}}
+function shineBmp(e,op,p,txt){const t=TMP;if(t.width!==e.cv.width||t.height!==e.cv.height){t.width=e.cv.width;t.height=e.cv.height}const c=t.getContext('2d');c.setTransform(1,0,0,1,0,0);c.globalCompositeOperation='source-over';c.globalAlpha=1;c.clearRect(0,0,t.width,t.height);c.drawImage(e.cv,0,0);c.setTransform(e.sc,0,0,e.sc,0,0);c.globalCompositeOperation='source-atop';c.globalAlpha=op;
+ const M=e.M,bw=e.bw,bh=e.bh,top=M-bh*.2,hh=bh*1.4,k=Math.tan(txt?.26:.3249),bwid=txt?bw*.9:bw*.5,x0=txt?M+bw*(1.5-2*p)-bwid/2:M+p/100*bwid,gr=c.createLinearGradient(x0,0,x0+bwid,0);
+ (txt?[[0,0],[.3,.45],[.5,1],[.7,.45],[1,0]]:[[0,0],[.22,.08],[.5,.55],[.78,.08],[1,0]]).forEach(a=>gr.addColorStop(a[0],`rgba(255,255,255,${a[1]})`));c.fillStyle=gr;c.beginPath();c.moveTo(x0+k*hh/2,top);c.lineTo(x0+bwid+k*hh/2,top);c.lineTo(x0+bwid-k*hh/2,top+hh);c.lineTo(x0-k*hh/2,top+hh);c.closePath();c.fill();c.globalCompositeOperation='source-over';c.globalAlpha=1;return t}
+function drawPrice(g,l,v,sc){const W=l.w,H=l.h,dk=l.c3||'#0b2b17',F=px=>'800 '+px+'px Fredoka,system-ui,sans-serif',D2=Math.PI/180;g.textAlign='center';g.textBaseline='middle';g.lineJoin='round';
+ const txt=(s,px,fill,rings,shd)=>{g.font=F(px);rings.forEach((q,i)=>{g.save();if(i===0&&shd){g.shadowColor='rgba(0,0,0,.4)';g.shadowBlur=W*.03*sc;g.shadowOffsetY=W*.025*sc}g.lineWidth=q[0]*2;g.strokeStyle=q[1];g.strokeText(s,0,px*.04);g.restore()});g.fillStyle=fill;g.fillText(s,0,px*.04)};
+ const fs=W*.11;g.font=F(fs);const tw=g.measureText(l.t1).width;
+ g.save();g.globalAlpha*=v.po[0];g.translate(W/2,H*.02+fs/2+v.po[1]);g.scale(v.po[2],v.po[2]);txt(l.t1,fs,'#fff',[[W*.009,dk]],1);
+ const sw=tw*1.1,sh2=Math.max(3,W*.016);g.save();g.translate(-sw/2,0);g.rotate(-4*D2);g.scale(Math.max(0,1-Math.pow(1-v.u,3)),1);g.fillStyle='rgba(255,255,255,.55)';g.fillRect(-W*.004,-sh2/2-W*.004,sw+W*.008,sh2+W*.008);g.fillStyle='#d6202c';g.fillRect(0,-sh2/2,sw,sh2);g.restore();g.restore();
+ if(!v.pn)return;
+ const f1=W*.085,f9=W*.3,fr=W*.09,gap=W*.015,bd=W*.1,mr=-W*.05;g.font=F(f1);const w1=g.measureText(l.t3).width;g.font=F(f9);g.letterSpacing=-f9*.02+'px';const w9=g.measureText(l.t2).width;g.letterSpacing='0px';g.font=F(fr);const wr=g.measureText(l.t4).width;
+ let x=(W-(w1+bd+mr+w9+wr+gap*3))/2;const rb=H*.3+W*.3,it=[[w1,f1,W*.05,v.p[0],0],[bd,bd,W*.1,v.p[1],mr],[w9,f9,0,v.p[2],0],[wr,fr,W*.04,v.p[3],0]],pos=[];it.forEach(q=>{pos.push(x+q[0]/2);x+=q[0]+q[4]+gap});
+ [0,2,3,1].forEach(k=>{const q=it[k],cx=pos[k],cy=rb-q[2]-q[1]/2,p=q[3];g.save();g.translate(cx,cy);
+  if(k===0){g.translate(-40*(1-p),0);g.scale(p,p);txt(l.t3,f1,'#fff',[[W*.009,dk]],1)}
+  else if(k===1){g.scale(p,p);const r=bd/2;g.fillStyle=dk;g.beginPath();g.arc(0,0,r+W*.008,0,7);g.fill();g.fillStyle='#fff';g.beginPath();g.arc(0,0,r,0,7);g.fill();g.fillStyle=l.c2;g.beginPath();g.arc(0,0,r-W*.008,0,7);g.fill();g.fillStyle='#fff';g.font=F(W*.05);g.fillText(l.t5,0,W*.002)}
+  else if(k===2){g.scale(p*v.pu,p*v.pu);g.rotate(-10*(1-p)*D2);g.letterSpacing=-f9*.02+'px';txt(l.t2,f9,l.c,[[W*.026,dk],[W*.012,'#fff']],1);g.letterSpacing='0px'}
+  else{g.scale(p,p);txt(l.t4,fr,'#fff',[[W*.009,dk]],1)}
+  g.restore()})}
+async function fastFrame(W,H,cv,g,sc){const im2=$('bgmode').value==='img'&&!!BGI;
+ g.setTransform(1,0,0,1,0,0);g.globalAlpha=1;g.fillStyle=im2?'#111':'#fff';g.fillRect(0,0,W,H);g.drawImage($('bgc'),0,0,W,H);
+ const items=[];L.forEach((l,i)=>{const d=st.children[i];if(!d||d.style.display==='none'||!l.vis)return;if(d._bk&&!l.img)items.push({z:-50,i:-1,l,el:d._bk,d});items.push({z:l.z,i,l,el:d,d})});
+ items.sort((a,b)=>a.z-b.z||a.i-b.i);
+ for(const it of items){const l=it.l,el=it.el,r=RT.get(l);if(!r)continue;g.setTransform(sc,0,0,sc,0,0);g.globalAlpha=Math.max(0,Math.min(1,+it.d.style.opacity));g.translate(r.x,r.y);g.rotate(r.r);g.scale(r.s,r.s);
+  if(l.type==='price'){const v=PV.get(l);if(v){g.translate(-l.w/2,-l.h/2);drawPrice(g,l,v,sc)}continue}
+  let e=BC.get(el);if(!e){e=await layerBmp(el,l,sc);BC.set(el,e)}
+  let src=e.cv;if(el===it.d){const sh=el.querySelector('.shn');if(sh){const ii=sh.firstChild,op=+ii.style.opacity||0;if(op>0){const m=/translateX\((-?[\d.]+)%\)/.exec(ii.style.transform);src=shineBmp(e,op,m?+m[1]:0,0)}}else if(l.type==='text'){const m=parseFloat(el.style.backgroundPosition);if(m<99.9)src=shineBmp(e,1,m/100,1)}}
+  g.drawImage(src,-(e.bw/2+e.M),-(e.bh/2+e.M),e.cv.width/sc,e.cv.height/sc)}
+ g.setTransform(1,0,0,1,0,0);g.globalAlpha=1;g.drawImage($('fx'),0,0,W,H)}
+async function mixAudio(D){const off=new OfflineAudioContext(2,Math.ceil(48000*D),48000),sA=AC,sM=mg,sB=BUS;AC=off;BUS=null;mg=mkMaster(off);mg.gain.value=+$('vol').value;
+ try{for(const e of REC.ev)sfxAt(e.k,e.t,{pit:e.pit,v:e.v});return await off.startRendering()}finally{AC=sA;mg=sM;BUS=sB}}
+async function exportVideo(){
+ if(EXP){XC=true;return}
+ if(!window.VideoEncoder||!window.Mp4Muxer){alert('Export video butuh Chrome/Edge terbaru + koneksi internet (untuk pustaka MP4).');return}
+ ac();const D=Math.max(3,+$('dur').value||15),FPS=60,N=Math.round(D*FPS),w=st.offsetWidth,h=st.offsetHeight,ev2=x=>Math.round(x/2)*2;let sc=+$('xs').value,W,H,cfg=null;
+ for(;sc>=1;sc--){W=ev2(w*sc);H=ev2(h*sc);const k={codec:'avc1.640034',width:W,height:H,bitrate:Math.min(100e6,Math.round(W*H*FPS*.14)),framerate:FPS};if((await VideoEncoder.isConfigSupported(k)).supported){cfg=k;break}}
+ if(!cfg){alert('Encoder video tidak mendukung ukuran ini.');return}
+ let au=null;if(window.AudioEncoder)for(const c of [['mp4a.40.2','aac'],['opus','opus']]){const k={codec:c[0],sampleRate:48000,numberOfChannels:2,bitrate:192000};try{if((await AudioEncoder.isConfigSupported(k)).supported){au={k,m:c[1]};break}}catch(e){}}
+ const muxer=new Mp4Muxer.Muxer({target:new Mp4Muxer.ArrayBufferTarget(),video:{codec:'avc',width:W,height:H,frameRate:FPS},audio:au?{codec:au.m,numberOfChannels:2,sampleRate:48000}:undefined,fastStart:'in-memory'});
+ const sv0={pl:playing,sp:$('spd').value,pn:performance.now},raf=window.requestAnimationFrame,cv=document.createElement('canvas');cv.width=W;cv.height=H;const g=cv.getContext('2d'),btn=$('vid');
+ BC.clear();EXP=true;XC=false;btn.textContent='⏹ Batal render';playing=true;$('spd').value=1;killBus();tAcc=0;LP=0;SC=-1;played={};parts.length=0;LG=0;L.forEach(l=>{PG.delete(l);PG2.delete(l)});last=0;REC.on=true;REC.ev=[];REC.t=0;performance.now=()=>REC.t*1000+1e6;
+ const venc=new VideoEncoder({output:(c,m)=>muxer.addVideoChunk(c,m),error:e=>{XC=true;console.error(e)}});
+ try{venc.configure(cfg);const pool=Array.from({length:4},()=>{const a=document.createElement('canvas');a.width=W;a.height=H;const b=document.createElement('canvas');b.width=w;b.height=h;return{cv:a,fc:b}}),pend=[],T00=Date.now(),fin=async()=>{const e=pend.shift();await e.p;const vf=new VideoFrame(pool[e.sl].cv,{timestamp:Math.round(e.i*1e6/FPS),duration:Math.round(1e6/FPS)});venc.encode(vf,{keyFrame:e.i%FPS===0});vf.close();while(venc.encodeQueueSize>6)await new Promise(r=>setTimeout(r,5))};
+  for(let i=0;i<N&&!XC;i++){REC.t=i/FPS;window.requestAnimationFrame=()=>0;try{frame(i*1000/FPS,1)}finally{window.requestAnimationFrame=raf}
+   await fastFrame(W,H,cv,g,sc);const vf=new VideoFrame(cv,{timestamp:Math.round(i*1e6/FPS),duration:Math.round(1e6/FPS)});venc.encode(vf,{keyFrame:i%FPS===0});vf.close();while(venc.encodeQueueSize>6)await new Promise(r=>setTimeout(r,5));
+   $('tm').textContent='Render '+(i+1)+'/'+N+' ('+W+'x'+H+') ~'+Math.round((Date.now()-T00)/(i+1)*(N-i-1)/1000)+' dtk lagi';$('bar').style.width=((i+1)/N*100)+'%';if(i%4===0)await new Promise(r=>setTimeout(r))}
+  while(pend.length)await fin();if(!XC){await venc.flush();REC.on=false;
+   if(au){$('tm').textContent='Mixdown audio...';const buf=await mixAudio(D),aenc=new AudioEncoder({output:(c,m)=>muxer.addAudioChunk(c,m),error:e=>console.error(e)});aenc.configure(au.k);
+    const c0=buf.getChannelData(0),c1=buf.numberOfChannels>1?buf.getChannelData(1):c0,BL=4800;for(let o=0;o<buf.length;o+=BL){const n=Math.min(BL,buf.length-o),d=new Float32Array(n*2);d.set(c0.subarray(o,o+n),0);d.set(c1.subarray(o,o+n),n);const ad=new AudioData({format:'f32-planar',sampleRate:48000,numberOfFrames:n,numberOfChannels:2,timestamp:Math.round(o/48000*1e6),data:d});aenc.encode(ad);ad.close()}await aenc.flush()}
+   muxer.finalize();const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([muxer.target.buffer],{type:'video/mp4'}));a.download='video-'+W+'x'+H+'-60fps.mp4';a.click();$('tm').textContent='Selesai ✓'}
+  else $('tm').textContent='Dibatalkan'
+ }catch(err){alert('Gagal render video: '+(err.message||err))}
+ finally{REC.on=false;EXP=false;performance.now=sv0.pn;window.requestAnimationFrame=raf;playing=sv0.pl;$('spd').value=sv0.sp;tAcc=0;LP=0;SC=-1;played={};parts.length=0;last=performance.now();btn.textContent='🎬 Video MP4 60 FPS';try{venc.close()}catch(e){}}}
+$('vid').onclick=exportVideo;
 const ease=t=>{t=Math.min(1,Math.max(0,t));return 1+2.7*Math.pow(t-1,3)+1.7*Math.pow(t-1,2)};
-function frame(now){const dt=(now-last)/1000;last=now;const sp=+$('spd').value;if(playing)tAcc+=dt*sp;const D=Math.max(3,+$('dur').value||15);if(tAcc>=D){if(mr&&mr.state==='recording')mr.stop();tAcc=0;played={};parts.length=0;if(AC)whoosh()}const T=tAcc;
+function frame(now,ex){if(EXP&&!ex){requestAnimationFrame(frame);return}const dt0=(now-last)/1000,dt=ex?dt0:Math.min(dt0,.1);last=now;const sp=+$('spd').value;if(playing)tAcc+=dt*sp;const D=Math.max(3,+$('dur').value||15);if(tAcc>=D){if(mr&&mr.state==='recording')mr.stop();tAcc-=D;LP++;played={};parts.length=0}const T=tAcc;
  const zoom=1+(+$('zm').value)*(.5-.5*Math.cos(T*6.2832/D));st.style.setProperty('--z',zoom);
  const BMA=L.some(x=>x.in==='basket'),H=st.offsetHeight,W=st.offsetWidth,w1=6.2832*Math.max(1,Math.round(D/4.5))/D,w2=6.2832*Math.max(1,Math.round(D/7))/D;
- L.forEach((l,i)=>{const d=st.children[i];if(!d)return;const ph=i*1.3,bm=l.in==='basket'&&l.type!=='basket',del=(l.type==='basket'&&BMA)?.1:bm?.7+i*.3:.6+i*.25,pr=Math.min(1,Math.max(0,(T-del)/(bm?1:.9))),p=bm?ease(pr)*(.4+.6*pr*pr*(3-2*pr)):ease((T-del)/.9);
-  if(playing&&T>del+(bm?.85:0)&&!played[i]){played[i]=1;if(AC)pop();if(l.type==='prod')burst(l.x/100*W,l.y/100*H,36,l)}
+ L.map((_,i)=>i).sort((a,b)=>(L[b].type==='basket')-(L[a].type==='basket')).forEach(i=>{const l=L[i],d=st.children[i];if(!d)return;const tm=tmg(l,i,BMA),ph=i*1.3,bm=tm.bm,del=tm.del,pr=Math.min(1,Math.max(0,(T-del)/tm.dur)),p=bm?ease(pr)*(.4+.6*pr*pr*(3-2*pr)):ease((T-del)/.9);
+  if(playing&&T>=tm.at&&!played[i]){played[i]=1;if(l.type==='prod'&&l.vis)burst(l.x/100*W,l.y/100*H,36,l)}
   const fy=Math.sin(T*w1+ph)*l.fl,fx=Math.cos(T*w2+ph)*l.fl*.4,wr=Math.sin(T*w1+ph)*l.fl*.12;
   const m0=l.in||'drop',m=(m0==='basket'&&l.type==='basket')?'pop':m0,u=1-Math.min(1,p),ue=1-(pr<.5?4*pr*pr*pr:1-Math.pow(-2*pr+2,3)/2),B=m==='basket'?L.find(x=>x.type==='basket'&&x.vis):null,BR=B&&RT.get(B),sx0=BR?BR.x+(l.x/100*W-BR.x)*.3:l.x/100*W,dy0=BR?-.14*BR.bh*BR.s:0,sn=BR?Math.sin(BR.r):0,cs=BR?Math.cos(BR.r):1,sy0=BR?BR.y+((sx0-BR.x)+dy0*sn)/cs*sn+dy0*cs+l.h*.375*l.s+6:l.y/100*H,xe=pr*pr*(3-2*pr),dX=m==='left'?-W*.7*u:m==='right'?W*.7*u:m==='basket'?(sx0-l.x/100*W)*(1-xe):0,dY=m==='drop'?-H*.5*u:m==='up'?H*.6*u:m==='basket'?(sy0-l.y/100*H)*(1-p):0,sk=m==='drop'?.4+.6*p:(m==='pop'||m==='spin')?Math.max(0,p):m==='basket'?.75+.25*Math.max(0,p):1,rt=m==='spin'?360*u:m==='basket'?-12*(1-p):0;
   d.style.opacity=Math.min(1,Math.max(0,(T-del)*4));
@@ -266,12 +401,12 @@ function frame(now){const dt=(now-last)/1000;last=now;const sp=+$('spd').value;i
   if(l.type==='price')pAnim(l,d,T,D);
   if(l.type==='text'){const u=Math.min(1,q/.45);d.style.backgroundPosition=(on&&q<.45?(1-(.5-.5*Math.cos(Math.PI*u)))*100:100)+'% 0'}
   if(playing&&p>=1&&l.type!=='basket'&&$('fxs').checked&&Math.random()<dt*sp*(l.type==='text'?3:4)){const pt=pick(l);sparkAt(l,pt[0],pt[1])}});
- if(playing&&T>4&&Math.floor(T/5)!==Math.floor((T-dt*sp)/5)){if(AC)chime();L.forEach(l=>{if(l.type==='prod')burst(l.x/100*W,l.y/100*H,22,l)})}
- drawFx(playing?Math.min(dt,.05)*sp:0);drawBg(T,D);$('tm').textContent=T.toFixed(1)+' / '+D+' dtk';$('bar').style.width=(T/D*100)+'%';
+ if(playing&&T>4&&Math.floor(T/5)!==Math.floor((T-dt*sp)/5)){L.forEach(l=>{if(l.type==='prod')burst(l.x/100*W,l.y/100*H,22,l)})}
+ drawFx(playing?Math.min(dt,.05)*sp:0);drawBg(T,D);if(playing)pump(D,sp,LP*D+T);const ts=T.toFixed(1)+' / '+D+' dtk',te=$('tm');if(te.textContent!==ts)te.textContent=ts;$('bar').style.width=(T/D*100)+'%';
  requestAnimationFrame(frame)}
-function reset(){tAcc=0;played={};if(AC){whoosh()}}
+function reset(){tAcc=0;LP=0;SC=-1;played={};killBus()}
 $('start').onclick=()=>{ac();$('start').remove();reset()};
-$('pp').onclick=()=>{playing=!playing;$('pp').textContent=playing?'⏸ Jeda':'▶ Putar'};
+$('pp').onclick=()=>{playing=!playing;$('pp').textContent=playing?'⏸ Jeda':'▶ Putar';killBus();SC=LP*getD()+tAcc};
 $('rs').onclick=()=>{ac();reset()};
 let mr,ch=[];$('rec').onclick=async()=>{if(mr&&mr.state==='recording'){mr.stop();return}
  try{const s=await navigator.mediaDevices.getDisplayMedia({video:true,audio:true,preferCurrentTab:true});mr=new MediaRecorder(s);ch=[];mr.ondataavailable=e=>ch.push(e.data);
