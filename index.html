@@ -742,6 +742,45 @@
   .adm-set{ display:grid; gap:12px; } .adm-set label{ display:grid; gap:5px; font-weight:600; font-size:13.5px; }
   .adm-set input, .adm-set textarea{ padding:9px 11px; border:1px solid #D8D5D3; border-radius:8px; font:inherit; font-size:14px; font-weight:400; }
   .adm-tabs{ flex-wrap:wrap; } .adm-f input[type=checkbox]{ width:auto; } .adm-f label{ font-size:13px; display:flex; gap:8px; align-items:center; }
+
+/* ===== Katalog digital terbaru & panel produk ===== */
+.nav-links a.nav-katalog{ display:inline-flex; align-items:center; gap:7px; color:var(--red); background:var(--red-tint); }
+.nav-links a.nav-katalog:hover{ background:var(--red); color:#fff; }
+.nk-badge{ font-size:10px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; background:var(--red); color:#fff; padding:2px 7px; border-radius:99px; }
+.nav-links a.nav-katalog:hover .nk-badge{ background:#fff; color:var(--red); }
+.mobile-panel a.nav-katalog{ color:var(--red); }
+.nav-katalog-m{ display:none; align-items:center; gap:6px; padding:8px 14px; border-radius:999px; background:var(--red); color:#fff; font-weight:700; font-size:13px; white-space:nowrap; }
+@media (max-width:900px){ .nav-katalog-m{ display:inline-flex; } .nav-right{ display:flex; align-items:center; gap:10px; } }
+.dc-banner{ margin-top:72px; padding-top:64px; border-top:1px solid var(--line); display:grid; grid-template-columns:minmax(300px,440px) 1fr; gap:56px; align-items:center; }
+.dc-banner[hidden]{ display:none !important; }
+.dc-stage{ position:relative; display:grid; place-items:center; min-height:470px; animation:dcBob 6s ease-in-out infinite; }
+@keyframes dcBob{ 50%{ transform:translateY(-14px); } }
+@keyframes dcBob2{ 50%{ transform:translateY(10px); } }
+.dc-glow{ position:absolute; width:82%; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle,rgba(230,33,41,.3),transparent 68%); filter:blur(34px); z-index:0; }
+.dc-shadow{ position:absolute; bottom:3%; width:60%; height:34px; border-radius:50%; background:radial-gradient(ellipse at center,rgba(27,27,29,.5),transparent 70%); filter:blur(10px); z-index:0; }
+.dcb{ position:relative; z-index:1; display:block; width:min(330px,64vw); aspect-ratio:var(--ar,210/297); perspective:1500px; text-decoration:none; -webkit-tap-highlight-color:transparent; }
+.dcb-3d{ position:absolute; inset:0; transform-style:preserve-3d; transform:rotateX(var(--rx,6deg)) rotateY(var(--ry,-24deg)); transition:transform .45s cubic-bezier(.2,.8,.2,1); }
+.dcb:hover .dcb-3d{ transition-duration:.18s; }
+.dcb-cover{ position:absolute; inset:0; transform:translateZ(15px); border-radius:3px 10px 10px 3px; overflow:hidden; display:grid; place-items:center; color:#fff; background:linear-gradient(160deg,var(--red),var(--red-dark)); }
+.dcb-cover img{ width:100%; height:100%; object-fit:cover; display:block; }
+.dcb-cover::after{ content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(90deg,rgba(0,0,0,.32) 0,rgba(255,255,255,.2) 2.2%,rgba(0,0,0,.1) 4.2%,transparent 10%), radial-gradient(circle at var(--gx,30%) var(--gy,10%),rgba(255,255,255,.34),transparent 55%); }
+.dcb-back{ position:absolute; inset:0; transform:translateZ(-15px); border-radius:3px 10px 10px 3px; background:#7d1017; }
+.dcb-pages{ position:absolute; top:3px; bottom:3px; right:-15px; width:30px; transform:rotateY(90deg); background:repeating-linear-gradient(90deg,#fbf9f4 0 2px,#d9d3c4 2px 3px); border-radius:0 3px 3px 0; }
+.dcb-spine{ position:absolute; top:0; bottom:0; left:-15px; width:30px; transform:rotateY(-90deg); background:linear-gradient(90deg,#8f1219,#b8181f); border-radius:3px 0 0 3px; }
+.dcb-top{ position:absolute; left:3px; right:3px; top:-15px; height:30px; transform:rotateX(90deg); background:repeating-linear-gradient(0deg,#fbf9f4 0 2px,#d9d3c4 2px 3px); }
+.dcb-tag{ position:absolute; z-index:5; top:-12px; right:-14px; padding:7px 14px; border-radius:99px; font:800 12px 'Manrope',sans-serif; letter-spacing:.1em; text-transform:uppercase; color:#fff; background:linear-gradient(100deg,var(--red),#ff5a4a); box-shadow:0 8px 20px rgba(184,24,31,.38); transform:translateZ(40px) rotate(6deg); }
+.dc-chip{ position:absolute; z-index:3; display:inline-flex; align-items:center; gap:8px; padding:9px 14px; border-radius:14px; font:700 13px 'Inter',sans-serif; color:var(--ink); background:rgba(255,255,255,.82); border:1px solid var(--line); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); box-shadow:0 12px 30px -12px rgba(27,27,29,.35); animation:dcBob2 5s ease-in-out infinite; }
+.dc-chip svg{ color:var(--red); }
+.dc-chip.c1{ left:0; top:14%; } .dc-chip.c2{ right:0; bottom:14%; animation-delay:-2.4s; }
+.dc-body.section-head{ margin:0; max-width:560px; }
+.dc-body h2{ margin:0 0 14px; }
+.dc-body p{ margin:0 0 28px; color:var(--ink-soft); }
+.dc-body .btn{ display:inline-flex; align-items:center; gap:8px; }
+.catalog-panel{ animation:cpIn .45s var(--ease) both; }
+@keyframes cpIn{ from{ opacity:0; transform:translateY(14px); } to{ opacity:1; transform:none; } }
+.cp-close{ border:1px solid var(--line); background:#fff; color:var(--ink-soft); font:600 13px 'Inter',sans-serif; padding:8px 14px; border-radius:99px; cursor:pointer; }
+.cp-close:hover{ border-color:var(--red); color:var(--red); }
+@media (max-width:900px){ .dc-banner{ grid-template-columns:1fr; gap:24px; margin-top:56px; padding-top:44px; } .dc-stage{ min-height:380px; } .dc-chip{ display:none; } }
 </style>
 <script>
 /* ===== PENGATURAN SUPABASE (ganti 2 nilai ini saat pindah proyek Supabase) ===== */
@@ -760,12 +799,14 @@ window.TDI_SB={ url:'https://mmaazoldwvyeotroqbjl.supabase.co', key:'sb_publisha
     <nav class="nav-links" id="navLinks">
       <a href="#perusahaan" data-nav>Perusahaan</a>
       <a href="#produk" data-nav>Produk</a>
+      <a href="katalog-github/" class="nav-katalog" data-katalog-link><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5.5C2 4.7 2.7 4 3.5 4H10c1.1 0 2 .9 2 2v14c0-1.1-.9-2-2-2H3.5c-.8 0-1.5-.7-1.5-1.5v-11zM22 5.5c0-.8-.7-1.5-1.5-1.5H14c-1.1 0-2 .9-2 2v14c0-1.1.9-2 2-2h6.5c.8 0 1.5-.7 1.5-1.5v-11z"/></svg> Katalog Produk <span class="nk-badge">Baru</span></a>
       <a href="#media" data-nav>Media</a>
       <a href="#kontak" data-nav>Kontak</a>
       <a href="#karir" data-nav hidden>Karir</a>
       <a href="#beli-sekarang" data-nav class="nav-cta">Beli Sekarang</a>
     </nav>
     <div class="nav-right">
+      <a href="katalog-github/" class="nav-katalog-m" data-katalog-link><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5.5C2 4.7 2.7 4 3.5 4H10c1.1 0 2 .9 2 2v14c0-1.1-.9-2-2-2H3.5c-.8 0-1.5-.7-1.5-1.5v-11zM22 5.5c0-.8-.7-1.5-1.5-1.5H14c-1.1 0-2 .9-2 2v14c0-1.1.9-2 2-2h6.5c.8 0 1.5-.7 1.5-1.5v-11z"/></svg> Katalog Produk</a>
       <button class="hamburger" id="hamburgerBtn" aria-label="Buka menu" aria-expanded="false">
         <span></span>
       </button>
@@ -776,6 +817,7 @@ window.TDI_SB={ url:'https://mmaazoldwvyeotroqbjl.supabase.co', key:'sb_publisha
 <div class="mobile-panel" id="mobilePanel">
   <a href="#perusahaan" data-mnav>Perusahaan</a>
   <a href="#produk" data-mnav>Produk</a>
+  <a href="katalog-github/" class="nav-katalog" data-katalog-link>Katalog Produk (Digital) →</a>
   <a href="#media" data-mnav>Media</a>
   <a href="#kontak" data-mnav>Kontak</a>
   <a href="#karir" data-mnav hidden>Karir</a>
@@ -970,14 +1012,36 @@ window.TDI_SB={ url:'https://mmaazoldwvyeotroqbjl.supabase.co', key:'sb_publisha
 
     <div class="cat-grid reveal-stagger" data-reveal id="categoryGrid"></div>
 
-    <div class="catalog-head" style="margin-top:96px;">
-      <div>
-        <span class="kicker">Katalog Produk</span>
-        <h2 style="font-size:26px;">Jelajahi produk kami</h2>
+    <div class="dc-banner reveal" data-reveal id="digitalCatalog">
+      <div class="dc-stage" id="dcStage">
+        <div class="dc-glow"></div><div class="dc-shadow"></div>
+        <a class="dcb" id="dcBook" href="katalog-github/" data-katalog-link aria-label="Buka katalog digital terbaru">
+          <div class="dcb-3d"><div class="dcb-back"></div><div class="dcb-spine"></div><div class="dcb-pages"></div><div class="dcb-top"></div>
+            <div class="dcb-cover" id="dcCover"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5.5C2 4.7 2.7 4 3.5 4H10c1.1 0 2 .9 2 2v14c0-1.1-.9-2-2-2H3.5c-.8 0-1.5-.7-1.5-1.5v-11zM22 5.5c0-.8-.7-1.5-1.5-1.5H14c-1.1 0-2 .9-2 2v14c0-1.1.9-2 2-2h6.5c.8 0 1.5-.7 1.5-1.5v-11z"/></svg></div></div>
+          <span class="dcb-tag" id="dcBadge">Terbaru</span>
+        </a>
+        <span class="dc-chip c1"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 5.5C2 4.7 2.7 4 3.5 4H10c1.1 0 2 .9 2 2v14c0-1.1-.9-2-2-2H3.5c-.8 0-1.5-.7-1.5-1.5v-11zM22 5.5c0-.8-.7-1.5-1.5-1.5H14c-1.1 0-2 .9-2 2v14c0-1.1.9-2 2-2h6.5c.8 0 1.5-.7 1.5-1.5v-11z"/></svg><span>Balik halaman</span></span>
+        <span class="dc-chip c2"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3M11 8v6M8 11h6"/></svg><span>Zoom detail</span></span>
       </div>
-      <div class="filters" id="filterChips"></div>
+      <div class="dc-body section-head">
+        <span class="kicker" id="dcTag">Katalog Digital Terbaru</span>
+        <h2 id="dcTitle">Katalog Produk Toko Daging Indonesia</h2>
+        <p id="dcMeta">Baca seperti membuka buku sungguhan: balik halaman, zoom detail, dan unduh katalognya.</p>
+        <a class="btn btn-primary" id="dcBtn" href="katalog-github/" data-katalog-link><span>Buka Katalog Digital</span> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
     </div>
-    <div class="product-grid reveal-stagger" data-reveal id="productGrid"></div>
+
+    <div class="catalog-panel" id="catalogPanel" hidden>
+      <div class="catalog-head" style="margin-top:72px;">
+        <div>
+          <span class="kicker">Katalog Produk</span>
+          <h2 style="font-size:26px;">Jelajahi produk kami</h2>
+        </div>
+        <div class="filters" id="filterChips"></div>
+        <button type="button" class="cp-close" id="closeCatalog">Tutup ✕</button>
+      </div>
+      <div class="product-grid reveal-stagger" data-reveal id="productGrid"></div>
+    </div>
   </div>
 </section>
 
@@ -2071,6 +2135,7 @@ observeReveal(document);
     const a=$('#filterChips .chip.active'); renderProducts(a?a.dataset.key:'all');
   }
   function applySettings(){
+    window.__tdiSet=set; window.__tdiKatImg=set.katImg?blob(set.katImg):''; if(window.tdiKat) window.tdiKat();
     window.tdiHeroMs=Math.round(Math.min(15,Math.max(1,parseFloat(set.heroSec)||3))*1000);
     if(typeof heroSliderControl!=='undefined'&&heroSliderControl&&heroSliderControl.start){ heroSliderControl.stop(); heroSliderControl.start(); }
     if(set.title) $('.hero h1').textContent=set.title;
@@ -2247,6 +2312,15 @@ observeReveal(document);
   async function restorePrev(){ try{ const p=await db.doc('site/prev').get(); if(!p.exists||!p.data().json) return say('Belum ada versi sebelumnya.');
     if(!confirm('Kembalikan ke versi sebelum simpanan terakhir? (Klik Simpan untuk menerapkan)')) return; load(JSON.parse(p.data().json)); mark(); render(); }catch(err){ say('Gagal memuat versi sebelumnya.'); } }
   const ACT=(k,i,extra)=>'<div class="adm-acts"><button type="button" data-'+k+'-up="'+i+'">&uarr; Naik</button><button type="button" data-'+k+'-dn="'+i+'">&darr; Turun</button>'+(extra||'')+'</div>';
+  function katHtml(){
+    var f=function(k,l,ph,ta){ return '<label>'+l+(ta?'<textarea rows="3" data-s="'+k+'" placeholder="'+E(ph||'')+'">'+E(set[k]||'')+'</textarea>':'<input data-s="'+k+'" value="'+E(set[k]||'')+'" placeholder="'+E(ph||'')+'">')+'</label>'; };
+    return '<hr style="margin:22px 0;border:none;border-top:1px solid var(--line)">'
+      +'<h4 style="margin-bottom:10px">Katalog digital terbaru (bagian Produk)</h4><p class="adm-sm" style="margin-bottom:14px">Banner buku melayang di bagian Produk dan tombol Katalog Produk di menu atas. Kolom yang dikosongkan terisi otomatis dari katalog digital yang paling baru diterbitkan.</p>'
+      +'<label style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:13.5px;margin-bottom:12px"><input type="checkbox" data-s="katOff"'+(set.katOff?' checked':'')+' style="width:auto"> Sembunyikan banner katalog digital</label>'
+      +'<div class="adm-set">'+f('katTag','Label kecil (di atas judul)','Katalog Digital Terbaru')+f('katTitle','Judul','Otomatis: judul katalog terbaru')+f('katText','Teks deskripsi','Otomatis: jumlah halaman + ajakan membaca',1)+f('katBtn','Teks tombol','Buka Katalog Digital')+f('katBadge','Label di sudut buku','Terbaru')+f('katUrl','Link tujuan (opsional)','Otomatis: katalog digital terbaru')+'</div>'
+      +'<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0"><img src="'+(set.katImg?E(blob(set.katImg)):BLANK)+'" alt="" style="width:48px;height:64px;border-radius:6px;background:#f1efee;object-fit:cover;box-sizing:border-box">'
+      +'<input type="file" accept="image/*" id="admKatUp" style="width:auto"><span class="adm-sm">Gambar sampul buku (opsional, kosong = sampul katalog otomatis)</span>'+(set.katImg?'<button type="button" id="admKatNo">Hapus gambar</button>':'')+'</div>';
+  }
   function render(){
     document.querySelectorAll('.adm-tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
     qi.hidden=tab!=='prod';
@@ -2398,6 +2472,7 @@ observeReveal(document);
         +'<input type="file" accept="image/*" data-logoup="'+k+'" style="width:auto"><span class="adm-sm">Logo kustom (opsional), latar transparan (PNG) paling rapi</span>'
         +(set[k+'Logo']?'<button type="button" data-nologo="'+k+'">Hapus logo</button>':'')+'</div></div>';
       body.innerHTML='<div class="adm-set">'+f('title','Judul utama (di bawah slider)')+f('lead','Deskripsi singkat',1)+f('wa','Nomor WhatsApp (format 628xxxxxxxxxx)')+f('shopee','Link Shopee')+logoRow('shopee','Shopee','#EE4D2D')+f('tiktok','Link TikTok')+logoRow('tiktok','TikTok','#161617')+f('instagram','Link Instagram')+'</div>'
+        +katHtml()
         +'<hr style="margin:22px 0;border:none;border-top:1px solid var(--line)">'
         +'<h4 style="margin-bottom:10px">Iklan pop-up</h4><p class="adm-sm" style="margin-bottom:14px">Muncul sebagai jendela promo saat pengunjung membuka situs (sekali per kunjungan), dengan tombol &times; untuk menutup. Ukuran foto bebas, tidak dipotong paksa.</p>'
         +'<label style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:13.5px;margin-bottom:12px"><input type="checkbox" data-s="adOn"'+(set.adOn?' checked':'')+' style="width:auto"> Aktifkan iklan pop-up</label>'
@@ -2446,6 +2521,7 @@ observeReveal(document);
          else if(t.dataset.llogo!==undefined) links[+t.dataset.llogo].logo=await upload(t.files[0],64,64,true);
          else if(t.dataset.logoup) set[t.dataset.logoup+'Logo']=await upload(t.files[0],64,64,true);
          else if(t.id==='admAdUp') set.adImg=await uploadFree(t.files[0],900);
+         else if(t.id==='admKatUp') set.katImg=await uploadFree(t.files[0],900);
          else if(t.dataset.hero!==undefined) slides[+t.dataset.hero]={id:await upload(t.files[0],1600,700)};
          else items[+t.dataset.photo].assetId=await upload(t.files[0],800,600);
          mark(); render(); }
@@ -2496,6 +2572,7 @@ observeReveal(document);
     else if(n('lDel')!==null){ if(confirm('Hapus link ini?')) links.splice(n('lDel'),1); else c=0; }
     else if(e.target.id==='admAddL') links.push({label:'',url:''});
     else if(e.target.id==='admAdNo') set.adImg='';
+    else if(e.target.id==='admKatNo') set.katImg='';
     else if(e.target.id==='admDl'){ c=0; download(); }
     else if(e.target.id==='admPrev'){ c=0; restorePrev(); }
     else c=0;
@@ -2510,6 +2587,57 @@ observeReveal(document);
       await db.doc('site/hero').set({slides}); await db.doc('site/cats').set({cats}); await db.doc('site/about').set({about}); await db.doc('site/media').set({items:media}); await db.doc('site/products').set({items}); await db.doc('site/settings').set(set); await db.doc('site/deco').set({items:deco}); await db.doc('site/links').set({items:links}); logos.items=logos.items.filter(x=>x&&x.id).slice(0,50); await db.doc('site/logos').set(logos); await db.doc('site/karir').set(karir); savedAt=Date.now(); await db.doc('site/meta').set({at:savedAt});
       applyHero(); applyCategories(); applyProducts(); applySettings(); applyMedia(); applyAbout(); applyDeco(); applyLinks(); applyLogos(); applyKarir(); applyAdPopup(true); lastJson=snap(); dirty=false; sv.disabled=true; say('Tersimpan '+new Date(savedAt).toLocaleTimeString('id-ID')+'. Perubahan langsung tampil di situs.'); render(); }
     catch(err){ say('Gagal menyimpan: '+(err.message||err.code)+' (coba muat ulang halaman lalu login lagi)'); } };
+})();
+</script>
+<script>
+/* Katalog digital terbaru (buku 3D melayang) + panel produk yang muncul setelah kategori diklik */
+(function(){
+  var SB='https://mcbofezaoxshximbvrpn.supabase.co', KEY='sb_publishable_qSVXUSCDVw71yO_PHx2-MA_-Im2puKO';
+  var ARROW='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+  var $=function(q){return document.querySelector(q);};
+  var panel=$('#catalogPanel'), grid=$('#categoryGrid');
+  if(grid&&panel){
+    grid.addEventListener('click',function(e){ if(e.target.closest('.cat-card')) panel.hidden=false; },true);
+    var cb=$('#closeCatalog'); if(cb) cb.addEventListener('click',function(){ panel.hidden=true; var p=$('#produk'); if(p) p.scrollIntoView({behavior:'smooth'}); });
+  }
+  var auto={}, shownCover='';
+  function esc(t){ return String(t==null?'':t).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function setCover(url,alt){
+    var cv=$('#dcCover'), bk=$('#dcBook'); if(!cv||!url||url===shownCover) return; shownCover=url;
+    var img=new Image(); img.alt=alt||'Sampul katalog';
+    img.onload=function(){ if(url!==shownCover) return; cv.textContent=''; cv.appendChild(img); if(img.naturalWidth&&img.naturalHeight&&bk) bk.style.setProperty('--ar',img.naturalWidth+'/'+img.naturalHeight); };
+    img.src=url;
+  }
+  window.tdiKat=function(){
+    var S=window.__tdiSet||{}, root=$('#digitalCatalog'); if(!root) return;
+    root.hidden=!!S.katOff;
+    var href=S.katUrl||auto.href||'katalog-github/';
+    [].forEach.call(document.querySelectorAll('[data-katalog-link]'),function(a){ a.setAttribute('href',href); });
+    $('#dcTag').textContent=S.katTag||'Katalog Digital Terbaru';
+    $('#dcTitle').textContent=S.katTitle||auto.title||'Katalog Produk Toko Daging Indonesia';
+    $('#dcMeta').textContent=S.katText||auto.text||'Baca seperti membuka buku sungguhan: balik halaman, zoom detail, dan unduh katalognya.';
+    $('#dcBtn').innerHTML='<span>'+esc(S.katBtn||'Buka Katalog Digital')+'</span> '+ARROW;
+    $('#dcBadge').textContent=S.katBadge||'Terbaru';
+    var u=window.__tdiKatImg||auto.cover; if(u) setCover(u,S.katTitle||auto.title);
+  };
+  window.tdiKat();
+  fetch(SB+'/rest/v1/catalogs?select=title,slug,cover_path,page_count&status=eq.published&order=published_at.desc.nullslast&limit=1',{headers:{apikey:KEY}})
+    .then(function(r){ return r.ok?r.json():[]; })
+    .then(function(rows){
+      var c=rows&&rows[0]; if(!c) return;
+      auto={ href:'katalog-github/?c='+encodeURIComponent(c.slug), title:c.title,
+        text:c.page_count?c.page_count+' halaman. Baca seperti membuka buku sungguhan: balik halaman, zoom detail, dan unduh katalognya.':'',
+        cover:c.cover_path?SB+'/storage/v1/object/public/catalog/'+c.cover_path.split('/').map(encodeURIComponent).join('/'):'' };
+      window.tdiKat();
+    }).catch(function(){});
+
+  /* buku bergerak mengikuti kursor */
+  var stage=$('#dcStage'), t3d=stage&&stage.querySelector('.dcb-3d'), cover=$('#dcCover'), vis=false, raf=0, nx=0, ny=0;
+  if(stage&&t3d&&!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){
+    if('IntersectionObserver' in window) new IntersectionObserver(function(en){ vis=en[0].isIntersecting; }).observe(stage); else vis=true;
+    var apply=function(){ raf=0; t3d.style.setProperty('--ry',(-24+nx*20).toFixed(1)+'deg'); t3d.style.setProperty('--rx',(6-ny*12).toFixed(1)+'deg'); cover.style.setProperty('--gx',(50+nx*45)+'%'); cover.style.setProperty('--gy',(20+ny*40)+'%'); };
+    window.addEventListener('pointermove',function(e){ if(e.pointerType==='touch'||!vis) return; nx=(e.clientX/innerWidth)*2-1; ny=(e.clientY/innerHeight)*2-1; if(!raf) raf=requestAnimationFrame(apply); },{passive:true});
+  }
 })();
 </script>
 </body>
