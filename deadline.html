@@ -32,6 +32,7 @@ h2{font-size:17px;font-weight:800;margin:0 0 4px}
 .c-wk{background:linear-gradient(135deg,#6366f1,#8b5cf6)}.c-ok{background:linear-gradient(135deg,#10b981,#14b8a6)}
 form,.col{display:grid;gap:10px}
 input,textarea,button{font:inherit;color:var(--tx);background:var(--bg);border:1.5px solid var(--bd);border-radius:14px;padding:12px;width:100%;transition:.2s}
+input{min-width:0;max-width:100%}input[type=datetime-local]{-webkit-appearance:none;appearance:none;min-height:50px;text-align:left}
 input:focus,textarea:focus{outline:0;border-color:var(--p1);box-shadow:0 0 0 4px rgba(124,58,237,.18)}
 button{cursor:pointer;color:#fff;border:0;font-weight:700;background:linear-gradient(135deg,var(--p1),var(--p2));box-shadow:0 8px 20px rgba(124,58,237,.35)}
 button:hover{transform:translateY(-1px)}button:active{transform:scale(.97)}
@@ -56,6 +57,10 @@ button.g{background:var(--bg);color:var(--tx);border:1.5px solid var(--bd);box-s
 @keyframes bar{from{width:100%}to{width:0}}
 .empty{color:var(--mu);text-align:center;padding:22px 10px}.empty div{font-size:40px}
 .bit{position:fixed;left:50%;top:40%;font-size:22px;pointer-events:none;z-index:99;animation:fly 1s ease-out forwards}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{position:relative}
+.chip input{position:absolute;opacity:0;width:0;height:0;padding:0;border:0}
+.chip span{display:inline-block;padding:8px 13px;border-radius:99px;border:1.5px solid var(--bd);background:var(--bg);font-size:14px;font-weight:700;cursor:pointer;user-select:none;transition:.2s}
+.chip input:checked+span{color:#fff;border-color:transparent;background:linear-gradient(135deg,var(--p1),var(--p2));box-shadow:0 6px 16px rgba(124,58,237,.35)}
 @keyframes fly{to{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
 @keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
 @media (max-width:520px){.stats{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:23px}}
@@ -88,6 +93,8 @@ button.g{background:var(--bg);color:var(--tx);border:1.5px solid var(--bd);box-s
    <input id="title" placeholder="Tugas / deadline apa?" required maxlength="120">
    <input id="due" type="datetime-local" required>
    <textarea id="note" rows="2" placeholder="Catatan (opsional)"></textarea>
+   <div class="d" style="font-weight:700;margin-top:2px">🔔 Ingatkan saya lewat Telegram:</div>
+   <div class="chips" id="chips"></div>
    <button type="submit">＋ Catat &amp; Ingatkan Saya 🚀</button>
   </form>
  </div>
@@ -119,6 +126,9 @@ window.onerror=function(m){fail("Terjadi error: "+m)};
 if(!window.supabase)fail("Pustaka Supabase gagal dimuat. Periksa koneksi internet atau matikan pemblokir iklan, lalu muat ulang (Ctrl+F5).");
 var db = window.supabase ? supabase.createClient(SB_URL, SB_KEY) : null, tasks = [], uid = null, notified = {}, timer = null;
 function $(i){return document.getElementById(i)}
+var OPT=[[2880,"2 hari"],[1440,"1 hari"],[180,"3 jam"],[60,"1 jam"],[30,"30 menit"],[10,"10 menit"],[0,"Tepat waktu"]],DEF=[1440,60,0];
+function rl(m){return m===0?"tepat waktu":m<60?m+" mnt":m<1440?(m/60)+" jam":(m/1440)+" hari"}
+function buildChips(){$("chips").innerHTML=OPT.map(function(o){return'<label class="chip"><input type="checkbox" value="'+o[0]+'"'+(DEF.indexOf(o[0])>-1?" checked":"")+'><span>'+(o[0]===0?"🚨 ":"")+o[1]+(o[0]===0?"":" sebelum")+'</span></label>'}).join("")}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function fmt(ts){return new Date(ts).toLocaleString("id-ID",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}
 function rel(ms){var m=Math.round(Math.abs(ms)/60000),h=Math.floor(m/60),d=Math.floor(h/24),s=m<60?m+" menit":h<48?h+" jam "+(m%60)+" mnt":d+" hari";return ms<0?"Terlambat "+s:s+" lagi"}
@@ -162,7 +172,7 @@ function render(){
  var pct=tasks.length?Math.round(done/tasks.length*100):0;$("ring").style.setProperty("--p",pct);$("pct").textContent=pct+"%";var sorted=tasks.slice().sort(function(a,b){return(a.done-b.done)||(a.due-b.due)});
  $("list").innerHTML=sorted.length?sorted.map(function(t){
   var ms=t.due-now,c=t.done?"ok":ms<0?"late":ms<864e5?"soon":"";
-  return'<div class="item s-'+(t.done?"ok":ms<0?"late":ms<864e5?"soon":"n")+(t.done?" done":"")+'"><div><div class="t">'+esc(t.title)+'</div><div class="d">'+fmt(t.due)+(t.note?" · "+esc(t.note):"")+
+  return'<div class="item s-'+(t.done?"ok":ms<0?"late":ms<864e5?"soon":"n")+(t.done?" done":"")+'"><div><div class="t">'+esc(t.title)+'</div><div class="d">'+fmt(t.due)+(t.note?" · "+esc(t.note):"")+(t.remind&&t.remind.length?"<br>🔔 "+t.remind.slice().sort(function(a,b){return b-a}).map(rl).join(" · "):"")+
   '</div><span class="badge '+c+'">'+(t.done?"Selesai":rel(ms))+'</span></div><div class="row"><button class="g" data-a="done" data-id="'+t.id+'">'+(t.done?"↺":"✓")+'</button><button class="g" data-a="del" data-id="'+t.id+'">🗑</button></div></div>'
  }).join(""):'<div class="empty"><div>🎯</div>Belum ada deadline. Catat yang pertama dan mulai taklukkan!</div>'}
 function check(){var now=Date.now();
@@ -180,15 +190,18 @@ $("savewa").onclick=async function(){var n=$("wa").value.replace(/[^0-9-]/g,"");
  if(r.error)toast("Gagal: "+esc(r.error.message),"r");else{$("wa").value=n;toast("✅ Chat ID tersimpan")}};
 $("f").onsubmit=async function(e){e.preventDefault();
  var due=new Date($("due").value);if(isNaN(due))return;
- var r=await db.from("tasks").insert({title:$("title").value.trim(),note:$("note").value.trim(),due:due.toISOString()});
+ var rem=Array.prototype.map.call(document.querySelectorAll("#chips input:checked"),function(i){return+i.value});
+ var r=await db.from("tasks").insert({title:$("title").value.trim(),note:$("note").value.trim(),due:due.toISOString(),remind:rem});
  if(r.error){toast("Gagal: "+esc(r.error.message),"r");return}
  boom();toast("✅ Tercatat: <b>"+esc($("title").value)+"</b><br><span class='d'>"+fmt(due)+" · "+rel(due-Date.now())+" · WA dikirim</span>");
- $("f").reset();load()};
+ $("f").reset();setDue();load()};
 $("list").onclick=async function(e){var b=e.target.closest("button");if(!b)return;var id=b.dataset.id;
  if(b.dataset.a==="del")await db.from("tasks").delete().eq("id",id);
  else{var t=tasks.find(function(x){return x.id===id});await db.from("tasks").update({done:!t.done}).eq("id",id);if(!t.done){boom();toast("🎉 Mantap! <b>"+esc(t.title)+"</b> selesai")}}
  load()};
 
+function setDue(){var d=new Date(Date.now()+36e5);d.setMinutes(0,0,0);try{$("due").value=new Date(d-d.getTimezoneOffset()*6e4).toISOString().slice(0,16)}catch(e){}}
+setDue();buildChips();
 if(db){db.auth.getSession().then(function(r){show(r.data.session)}).catch(function(e){fail("Gagal terhubung ke Supabase: "+e.message)});
 db.auth.onAuthStateChange(function(_e,s){show(s)})}
 </script>
