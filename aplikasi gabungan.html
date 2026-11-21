@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16302B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Gabung">
+<title>Aplikasi Gabung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF2F1; --ink:#16302B; --muted:#5B6F6A; --card:#FFFFFF; --line:#C9D6D2; --accent:#E0A100; --on-accent:#16302B;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#0F1D1A;--ink:#E8F0EE;--muted:#93A8A3;--card:#183029;--line:#2A4640;--accent:#F0B429;--on-accent:#0F1D1A}
+}
+:root[data-theme="dark"]{--bg:#0F1D1A;--ink:#E8F0EE;--muted:#93A8A3;--card:#183029;--line:#2A4640;--accent:#F0B429;--on-accent:#0F1D1A}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:"Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.5}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+[hidden]{display:none!important}
+.wrap{max-width:880px;margin:0 auto;padding:28px 20px 48px}
+header h1{font-size:clamp(2rem,6vw,3rem);line-height:1.05;font-weight:800;letter-spacing:-.02em;margin:8px 0 6px}
+header p{margin:0;color:var(--muted);max-width:46ch}
+.bar{display:flex;gap:10px;align-items:center;margin:26px 0 12px}
+.bar input{flex:1;min-width:0;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--card)}
+.btn{border:0;border-radius:10px;padding:12px 16px;background:var(--accent);color:var(--on-accent);font-weight:600;cursor:pointer}
+.btn:disabled{opacity:.6;cursor:wait}
+.btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
+.btn.danger{background:transparent;border:1.5px solid #B3261E;color:#B3261E}
+#status{min-height:1.5em;margin:0 0 10px;color:var(--muted);font-size:.9rem}
+#status.err{color:#B3261E}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.tile{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:16px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:10px;min-height:150px}
+.tile:hover{border-color:var(--ink)}
+.badge{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;font-weight:800;font-size:1.3rem;color:#fff}
+.tile h2{margin:0;font-size:1.1rem;font-weight:600}
+.tile p{margin:0;color:var(--muted);font-size:.92rem}
+.tile .edit{position:absolute;top:10px;right:10px;border:0;background:transparent;color:var(--muted);padding:6px 8px;border-radius:8px;cursor:pointer}
+.tile .edit:hover{background:var(--bg);color:var(--ink)}
+.tile.add{border-style:dashed;align-items:center;justify-content:center;color:var(--muted);font-weight:600}
+.empty{color:var(--muted);padding:24px 0}
+.foot{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-top:26px;color:var(--muted);font-size:.85rem}
+/* login */
+#login{max-width:400px;margin:0 auto;padding:12vh 20px 40px}
+#login h1{font-size:2.4rem;line-height:1.05;font-weight:800;letter-spacing:-.02em;margin:0 0 6px}
+#login p{margin:0 0 20px;color:var(--muted)}
+#login input{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;background:var(--card)}
+#login .btn{width:100%;margin-top:18px}
+/* viewer */
+#viewer{position:fixed;inset:0;background:var(--bg);display:none;flex-direction:column;z-index:20;padding-top:env(safe-area-inset-top,0px)}
+#viewer.on{display:flex}
+#vbar{display:flex;gap:8px;align-items:center;padding:8px 12px;background:var(--ink);color:var(--bg)}
+#vbar strong{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#vbar button{border:0;border-radius:8px;padding:8px 12px;background:var(--accent);color:var(--on-accent);font-weight:600;cursor:pointer}
+#frame{flex:1;width:100%;border:0;background:#fff;padding-bottom:env(safe-area-inset-bottom,0px)}
+/* dialog */
+dialog{border:0;border-radius:16px;padding:22px;width:min(440px,92vw);background:var(--card);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+dialog h3{margin:0 0 14px;font-size:1.3rem}
+label{display:block;font-weight:600;font-size:.9rem;margin:12px 0 4px}
+dialog input[type=text],dialog input[type=url],dialog textarea{width:100%;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg)}
+.colors{display:flex;gap:8px;flex-wrap:wrap}
+.colors button{width:34px;height:34px;border-radius:50%;border:3px solid transparent;cursor:pointer}
+.colors button[aria-pressed="true"]{border-color:var(--ink)}
+.actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<section id="login" hidden>
+  <h1>Aplikasi Gabung</h1>
+  <p>Masuk untuk membuka semua aplikasi Anda.</p>
+  <form id="lf">
+    <label for="l-email">Email</label>
+    <input id="l-email" type="email" autocomplete="username" required>
+    <label for="l-pass">Kata sandi</label>
+    <input id="l-pass" type="password" autocomplete="current-password" required>
+    <button class="btn" id="l-btn" type="submit">Masuk</button>
+    <p id="l-err" role="alert" style="color:#B3261E;margin:14px 0 0"></p>
+  </form>
+</section>
+
+<div class="wrap" id="main" hidden>
+  <header>
+    <h1>Aplikasi Gabung</h1>
+    <p>Semua aplikasi buatan Anda di satu tempat. Ketuk untuk membuka.</p>
+  </header>
+  <div class="bar">
+    <input id="q" type="search" placeholder="Cari aplikasi" aria-label="Cari aplikasi">
+    <button class="btn ghost" id="theme" aria-label="Ganti tema terang atau gelap">Tema</button>
+  </div>
+  <p id="status" role="status"></p>
+  <div class="grid" id="grid"></div>
+  <div class="foot">
+    <span id="who"></span>
+    <button class="btn ghost" id="logout">Keluar</button>
+  </div>
+</div>
+
+<section id="viewer" aria-label="Aplikasi terbuka">
+  <div id="vbar">
+    <button id="back">Kembali</button>
+    <strong id="vtitle"></strong>
+    <button id="newtab">Buka di tab baru</button>
+  </div>
+  <iframe id="frame" title="Aplikasi" allow="clipboard-write; notifications; camera; microphone"></iframe>
+</section>
+
+<dialog id="dlg">
+  <h3 id="dtitle">Tambah aplikasi</h3>
+  <label for="f-name">Nama</label>
+  <input type="text" id="f-name" maxlength="40">
+  <label for="f-url">Link (alamat web)</label>
+  <input type="url" id="f-url" placeholder="https://...">
+  <label for="f-desc">Keterangan singkat</label>
+  <textarea id="f-desc" rows="2" maxlength="90"></textarea>
+  <label>Warna ikon</label>
+  <div class="colors" id="colors"></div>
+  <div class="actions">
+    <button class="btn danger" id="del" type="button">Hapus</button>
+    <button class="btn ghost" id="cancel" type="button">Batal</button>
+    <button class="btn" id="save" type="button">Simpan</button>
+  </div>
+</dialog>
+
+<script>
+(function(){
+  var SB_URL="https://tmfnerttmlqkbspzknqm.supabase.co";
+  var SB_KEY="sb_publishable_D1q6L8w3IAplNLQzirWrTA_jx454D-e";
+  var SK="aplikasi-gabung:session", CK="aplikasi-gabung:cache", TK="aplikasi-gabung:theme";
+  var COLORS=["#B3261E","#1F6F5C","#2455A4","#7A3E9D","#C2570C","#3D4A47"];
+  var DEFAULTS=[
+    {name:"Toko Daging Indonesia",url:"https://tdiindoneisa.github.io/TokoDagingIndonesia/",description:"Situs toko dan panel admin TDI",color:COLORS[0],sort:1},
+    {name:"Catatan Deadline",url:"",description:"Catat tugas dan deadline, lengkap dengan pengingat",color:COLORS[1],sort:2}
+  ];
+  var $=function(id){return document.getElementById(id)};
+  function rj(k){try{var s=localStorage.getItem(k);return s?JSON.parse(s):null}catch(e){return null}}
+  function wj(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+  var session=rj(SK), apps=rj(CK)||[], editing=null, openUrl="", picked=COLORS[0], seeded=false;
+
+  /* tema */
+  try{var th=localStorage.getItem(TK);if(th)document.documentElement.setAttribute("data-theme",th)}catch(e){}
+  $("theme").onclick=function(){
+    var cur=document.documentElement.getAttribute("data-theme");
+    var dark=cur?cur==="dark":matchMedia("(prefers-color-scheme: dark)").matches;
+    var next=dark?"light":"dark";
+    document.documentElement.setAttribute("data-theme",next);
+    try{localStorage.setItem(TK,next)}catch(e){}
+  };
+
+  /* manifest untuk layar utama */
+  (function(){
+    var icon="data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="110" fill="#16302B"/><g fill="#E0A100"><rect x="110" y="110" width="140" height="140" rx="30"/><rect x="262" y="110" width="140" height="140" rx="30" opacity=".6"/><rect x="110" y="262" width="140" height="140" rx="30" opacity=".6"/><rect x="262" y="262" width="140" height="140" rx="30"/></g></svg>');
+    var m={name:"Aplikasi Gabung",short_name:"Gabung",start_url:location.href.split("#")[0],display:"standalone",background_color:"#16302B",theme_color:"#16302B",icons:[{src:icon,sizes:"any",type:"image/svg+xml",purpose:"any"}]};
+    try{
+      var l=document.createElement("link");l.rel="manifest";
+      l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:"application/manifest+json"}));
+      document.head.appendChild(l);
+      var a=document.createElement("link");a.rel="icon";a.href=icon;document.head.appendChild(a);
+    }catch(e){}
+  })();
+
+  /* ===== Supabase (tanpa library, hanya fetch) ===== */
+  function now(){return Math.floor(Date.now()/1000)}
+  function authReq(grant,body){
+    return fetch(SB_URL+"/auth/v1/token?grant_type="+grant,{
+      method:"POST",headers:{apikey:SB_KEY,"Content-Type":"application/json"},body:JSON.stringify(body)
+    }).then(function(r){return r.json().then(function(d){
+      if(!r.ok)throw new Error(d.error_description||d.msg||d.message||"Gagal masuk");
+      session={access_token:d.access_token,refresh_token:d.refresh_token,expires_at:now()+(d.expires_in||3600),email:(d.user&&d.user.email)||(session&&session.email)||""};
+      wj(SK,session);return session;
+    })});
+  }
+  function token(){
+    if(!session)return Promise.reject(new Error("Belum masuk"));
+    if(session.expires_at-60>now())return Promise.resolve(session.access_token);
+    return authReq("refresh_token",{refresh_token:session.refresh_token}).then(function(s){return s.access_token});
+  }
+  function api(path,method,body){
+    return token().then(function(t){
+      return fetch(SB_URL+"/rest/v1/"+path,{
+        method:method||"GET",
+        headers:{apikey:SB_KEY,Authorization:"Bearer "+t,"Content-Type":"application/json",Prefer:"return=representation"},
+        body:body?JSON.stringify(body):undefined
+      });
+    }).then(function(r){
+      if(r.status===401){signOut();throw new Error("Sesi habis, silakan masuk lagi.")}
+      if(!r.ok)return r.json().catch(function(){return{}}).then(function(e){throw new Error(e.message||"Gagal menghubungi server")});
+      return r.status===204?null:r.json();
+    });
+  }
+
+  /* ===== tampilan ===== */
+  function show(which){
+    $("login").hidden=which!=="login";
+    $("main").hidden=which!=="main";
+  }
+  function status(msg,isErr){var s=$("status");s.textContent=msg||"";s.className=isErr?"err":""}
+
+  function render(){
+    var q=$("q").value.trim().toLowerCase();
+    var list=apps.filter(function(a){return !q||(a.name+" "+(a.description||"")).toLowerCase().indexOf(q)>-1});
+    var h=list.map(function(a){
+      return '<div class="tile" role="button" tabindex="0" data-open="'+esc(a.id)+'">'+
+        '<div class="badge" style="background:'+esc(a.color)+'">'+esc((a.name||"?").charAt(0).toUpperCase())+'</div>'+
+        '<h2>'+esc(a.name)+'</h2><p>'+esc(a.description||(a.url?"":"Link belum diisi"))+'</p>'+
+        '<button class="edit" data-edit="'+esc(a.id)+'" aria-label="Ubah '+esc(a.name)+'">Ubah</button></div>';
+    }).join("");
+    if(!list.length&&q)h='<p class="empty">Tidak ada aplikasi yang cocok dengan pencarian itu.</p>';
+    h+='<button class="tile add" id="addbtn">+ Tambah aplikasi</button>';
+    $("grid").innerHTML=h;
+  }
+  $("q").oninput=render;
+  $("grid").addEventListener("click",function(e){
+    var ed=e.target.closest("[data-edit]");
+    if(ed){e.stopPropagation();openDialog(ed.getAttribute("data-edit"));return}
+    if(e.target.closest("#addbtn")){openDialog(null);return}
+    var t=e.target.closest("[data-open]");
+    if(t)openApp(t.getAttribute("data-open"));
+  });
+  $("grid").addEventListener("keydown",function(e){
+    if((e.key==="Enter"||e.key===" ")&&e.target.hasAttribute&&e.target.hasAttribute("data-open")){e.preventDefault();openApp(e.target.getAttribute("data-open"))}
+  });
+
+  /* ===== sinkron ===== */
+  function sync(){
+    status("Menyinkronkan…");
+    return api("hub_apps?select=*&order=sort.asc,created_at.asc").then(function(rows){
+      if(!rows.length&&!seeded){
+        seeded=true;
+        return api("hub_apps","POST",DEFAULTS).then(function(){return api("hub_apps?select=*&order=sort.asc,created_at.asc")});
+      }
+      return rows;
+    }).then(function(rows){
+      apps=rows;wj(CK,apps);render();status("");
+    }).catch(function(e){
+      status(e.message+(apps.length?" (menampilkan data terakhir yang tersimpan)":""),true);
+    });
+  }
+
+  /* ===== buka aplikasi ===== */
+  function find(id){return apps.filter(function(a){return a.id===id})[0]}
+  function openApp(id){
+    var a=find(id);if(!a)return;
+    if(!a.url){openDialog(id);return}
+    openUrl=a.url;
+    $("vtitle").textContent=a.name;
+    $("frame").src=a.url;
+    $("viewer").classList.add("on");
+    history.pushState({v:1},"");
+  }
+  function closeApp(){$("viewer").classList.remove("on");$("frame").src="about:blank"}
+  $("back").onclick=function(){if(history.state&&history.state.v)history.back();else closeApp()};
+  window.addEventListener("popstate",closeApp);
+  $("newtab").onclick=function(){if(openUrl)window.open(openUrl,"_blank","noopener")};
+
+  /* ===== tambah / ubah / hapus ===== */
+  function buildColors(){
+    $("colors").innerHTML=COLORS.map(function(c){
+      return '<button type="button" data-c="'+c+'" style="background:'+c+'" aria-label="Warna '+c+'" aria-pressed="'+(c===picked)+'"></button>';
+    }).join("");
+  }
+  $("colors").onclick=function(e){var b=e.target.closest("[data-c]");if(!b)return;picked=b.getAttribute("data-c");buildColors()};
+  function openDialog(id){
+    editing=id;var a=id?find(id):null;
+    $("dtitle").textContent=a?"Ubah aplikasi":"Tambah aplikasi";
+    $("f-name").value=a?a.name:"";
+    $("f-url").value=a?a.url:"";
+    $("f-desc").value=a?(a.description||""):"";
+    picked=a?a.color:COLORS[apps.length%COLORS.length];
+    $("del").style.display=a?"":"none";
+    buildColors();$("dlg").showModal();
+  }
+  $("cancel").onclick=function(){$("dlg").close()};
+  $("save").onclick=function(){
+    var name=$("f-name").value.trim(), url=$("f-url").value.trim();
+    if(!name){$("f-name").focus();return}
+    if(url&&!/^https?:\/\//i.test(url))url="https://"+url;
+    var data={name:name,url:url,description:$("f-desc").value.trim(),color:picked};
+    var btn=$("save");btn.disabled=true;
+    var p;
+    if(editing)p=api("hub_apps?id=eq."+encodeURIComponent(editing),"PATCH",data);
+    else{
+      var max=apps.reduce(function(m,a){return Math.max(m,a.sort||0)},0);
+      data.sort=max+1;p=api("hub_apps","POST",data);
+    }
+    p.then(function(){$("dlg").close();return sync()})
+     .catch(function(e){status(e.message,true);$("dlg").close()})
+     .then(function(){btn.disabled=false});
+  };
+  $("del").onclick=function(){
+    var a=find(editing);
+    if(a&&confirm("Hapus “"+a.name+"” dari daftar?")){
+      api("hub_apps?id=eq."+encodeURIComponent(editing),"DELETE")
+        .then(function(){$("dlg").close();return sync()})
+        .catch(function(e){status(e.message,true);$("dlg").close()});
+    }
+  };
+
+  /* ===== masuk / keluar ===== */
+  function enter(){
+    show("main");
+    $("who").textContent=session&&session.email?"Masuk sebagai "+session.email:"";
+    render();sync();
+  }
+  function signOut(){
+    session=null;apps=[];seeded=false;
+    try{localStorage.removeItem(SK);localStorage.removeItem(CK)}catch(e){}
+    closeApp();show("login");
+  }
+  $("logout").onclick=signOut;
+  $("lf").addEventListener("submit",function(e){
+    e.preventDefault();
+    var b=$("l-btn");b.disabled=true;$("l-err").textContent="";
+    authReq("password",{email:$("l-email").value.trim(),password:$("l-pass").value})
+      .then(function(){$("l-pass").value="";enter()})
+      .catch(function(err){
+        var m=err.message||"";
+        $("l-err").textContent=/invalid login/i.test(m)?"Email atau kata sandi salah.":m;
+      })
+      .then(function(){b.disabled=false});
+  });
+
+  if(session&&session.refresh_token)enter();else show("login");
+})();
+</script>
+</body>
+</html>
